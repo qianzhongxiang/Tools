@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Donn.Tools.Net.Client.TcpClient</AssemblyName>
+    <PackageVersion>0.0.5</PackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="donn.tools.logger" Version="1.0.3" />
+    <PackageReference Include="donn.tools.net.client.interface" Version="0.0.7" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>DONN.Tools.Logger</AssemblyName>
+    <RootNamespace>DONN.Tools.Logger</RootNamespace>
+    <PackageVersion>1.0.3</PackageVersion>
+  </PropertyGroup>    
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.8" />
+  </ItemGroup>
+
+</Project>
