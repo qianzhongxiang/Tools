@@ -3,5 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-
+<PropertyGroup>
+<AssemblyName>DONN.Tools.Protocol.DataResolver</AssemblyName>
+<TargetFramework>netstandard2.0</TargetFramework>
+<PackageVersion>1.0.1</PackageVersion>
+</PropertyGroup>
 </Project>
