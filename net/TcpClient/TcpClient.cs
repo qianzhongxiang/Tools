@@ -10,6 +10,7 @@ using System.Threading;
 using System.Net.NetworkInformation;
 using NetClient.Entity;
 using DONN.Tools.Logger;
+using System.Collections.Concurrent;
 
 namespace NetClient
 {
@@ -28,7 +29,7 @@ namespace NetClient
     public class TcpClient : ITcpClient
     {
         private Dictionary<string, TcpListener> Listerners = new Dictionary<string, TcpListener>();
-        private Dictionary<string, System.Net.Sockets.TcpClient> Clients = new Dictionary<string, System.Net.Sockets.TcpClient>();
+        private ConcurrentDictionary<string, System.Net.Sockets.TcpClient> Clients = new ConcurrentDictionary<string, System.Net.Sockets.TcpClient>();
         public TcpClient()
         {
             //定时清理Client
@@ -41,6 +42,10 @@ namespace NetClient
                 }
             });
         }
+        public int ClientCount()
+        {
+            return Clients.Count;
+        }
         private void ClearClients()
         {
             try
@@ -49,13 +54,11 @@ namespace NetClient
                 foreach (var key in keys)
                 {
                     //目前没有其他地方去remove client，所有不需要判断key是否存在
-                    lock (Clients)
+
+                    if (!IsConnected(Clients[key]))
                     {
-                        if (!IsConnected(Clients[key]))
-                        {
-                            Clients[key].Close();
-                            Clients.Remove(key);
-                        }
+                        Clients[key].Close();
+                        Clients.TryRemove(key, out var c);
                     }
                 }
             }
