@@ -1,0 +1,17 @@
+﻿{
+  "P1": {
+    "PortName": "com3",
+    "BaudRate": 9600,
+    "DataBits": 8,
+    "StopBits": 1,
+    "Parity": 0
+  },
+  "P2": {
+    "PortName": "com4",
+    "BaudRate": 9600,
+    "DataBits": 8,
+    "StopBits": 1,
+    "Parity": 0
+  }
+
+}
