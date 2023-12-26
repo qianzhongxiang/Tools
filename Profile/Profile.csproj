@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!--<TargetFrameworks>net6.0;net7.0</TargetFrameworks>-->
+		<TargetFramework>net6.0</TargetFramework>
+		<AssemblyName>Cake.Profile</AssemblyName>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Cake.Common" Version="3.0.0" />
+		<PackageReference Include="Cake.Core" Version="3.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="SharpSvn" Version="1.14001.156" />
+	</ItemGroup>
+
+</Project>
