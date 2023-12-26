@@ -79,6 +79,7 @@ namespace Cake.Profile
             profile.FromSubverion = context.Environment.GetEnvironmentVariable("GO_FROM_REVISION_SVN");
             profile.PreVersion = context.Environment.GetEnvironmentVariable("VERSION");
             profile.SVN = context.Environment.GetEnvironmentVariable("GO_MATERIAL_URL_SVN");
+            //profile.Dir = context.Environment.WorkingDirectory.FullPath;
             return profile;
         }
 

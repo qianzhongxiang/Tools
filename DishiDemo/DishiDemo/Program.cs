@@ -1,5 +1,6 @@
 ﻿using ComMonitor;
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DishiDemo
 {
@@ -24,7 +25,7 @@ namespace DishiDemo
         }
 
         public Protcol p { get; }
-
+        private bool Finished = false;
         public void Recive(byte[] c)
         {
             switch (state)
@@ -34,6 +35,7 @@ namespace DishiDemo
                     {
                         state = 1;
                         p.Write(new byte[] { 0x06 });
+                        Finished = false;
                     }
                     break;
                 case 1:
@@ -53,21 +55,36 @@ namespace DishiDemo
                 case 3:
                     if (c[0] == 0x06)
                     {
-                        if (NotFiniteNumberException)
+                        if (Finished)
                         {
-                            state = 4;
+                            state = 1;
+                            p.Write(new byte[] { 0x04 });
                         }
                         else
                         {
-                            state = 3;
+                            p.Write(new byte[] { 0x04 });
+
+                            Finished = true;
                         }
-                        p.Write(new byte[] { 0x06 });
+
                     }
                     break;
                 default:
                     break;
             }
 
+        }
+        public byte[] SingleLineData(double x, double y)
+        {
+            var xi = (int)System.Math.Round(x);
+            var x1 = Convert.ToByte((xi % 100).ToString(), 16);
+            var x2 = Convert.ToByte((xi / 100 % 100).ToString(), 16);
+            var x3 = Convert.ToByte((xi / 10000 % 100).ToString(), 16);
+            var yi = (int)System.Math.Round(y);
+            var y1 = Convert.ToByte((yi % 100).ToString(), 16);
+            var y2 = Convert.ToByte((yi / 100 % 100).ToString(), 16);
+            var y3 = Convert.ToByte((yi / 10000 % 100).ToString(), 16);
+            return new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, x1, x2, x3, 0x00, y1, y2, y3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
         }
     }
 }
