@@ -10,18 +10,20 @@ namespace DishiDemo
         {
             Console.WriteLine("Hello, World!");
             var p = new Protcol { PortName = "" };
-            var cd = new CD(p);
-            p.ReciveCallback = cd.Recive;
+            p.Connect();
+            var cd = new DataSolver(p);
         }
     }
 
 
-    public class CD
+    public class DataSolver
     {
         private int state = 0;
-        public CD(Protcol protcol)
+        public DataSolver(Protcol protcol)
         {
             p = protcol;
+            p.ReciveCallback = Recive;
+
         }
 
         public Protcol p { get; }
@@ -57,12 +59,15 @@ namespace DishiDemo
                     {
                         if (Finished)
                         {
-                            state = 1;
+                            state = 0;
                             p.Write(new byte[] { 0x04 });
                         }
                         else
                         {
-                            p.Write(new byte[] { 0x04 });
+                            var res = DataSolver.WrapData(DataSolver.SingleLineData(1, 1));
+                            //var res = DataSolver.MultiData(new (double, double)[] { (90566.81, 118942.98), (91274.17, 116942.09), (20, 20) });
+
+                            p.Write(res);
 
                             Finished = true;
                         }
@@ -74,7 +79,29 @@ namespace DishiDemo
             }
 
         }
-        public byte[] SingleLineData(double x, double y)
+        public static byte[] MultiData((double x, double y)[] values)
+        {
+            byte[] res = new byte[values.Length * 15 + 2];
+            for (int i = 0; i < values.Length; i++)
+            {
+                var x = values[i].x;
+                var y = values[i].y;
+                var xi = (int)System.Math.Round(x);
+                var x1 = Convert.ToByte((xi % 100).ToString(), 16);
+                var x2 = Convert.ToByte((xi / 100 % 100).ToString(), 16);
+                var x3 = Convert.ToByte((xi / 10000 % 100).ToString(), 16);
+                var yi = (int)System.Math.Round(y);
+                var y1 = Convert.ToByte((yi % 100).ToString(), 16);
+                var y2 = Convert.ToByte((yi / 100 % 100).ToString(), 16);
+                var y3 = Convert.ToByte((yi / 10000 % 100).ToString(), 16);
+                byte[] data = new byte[] { x1, x2, x3, 0x00, y1, y2, y3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+                data.CopyTo(res, i * 15);
+            }
+            res[res.Length - 2] = 0x03;
+            res[res.Length - 1] = 0xEE;
+            return res;
+        }
+        public static byte[] SingleLineData(double x, double y)
         {
             var xi = (int)System.Math.Round(x);
             var x1 = Convert.ToByte((xi % 100).ToString(), 16);
@@ -84,7 +111,32 @@ namespace DishiDemo
             var y1 = Convert.ToByte((yi % 100).ToString(), 16);
             var y2 = Convert.ToByte((yi / 100 % 100).ToString(), 16);
             var y3 = Convert.ToByte((yi / 10000 % 100).ToString(), 16);
-            return new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, x1, x2, x3, 0x00, y1, y2, y3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+            return new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, x1, x2, x3, 0x00, y1, y2, y3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+        }
+
+        public static byte[] WrapData(byte[] data)
+        {
+            var dl = data.Length + 1;
+            var bytes = System.Text.Encoding.ASCII.GetBytes(dl.ToString());
+            var res = new byte[dl + 2 + 2 + 2];
+            bytes.CopyTo(res, 2);
+            res[0] = 0x02;
+            res[1] = 0x30;
+            res[4] = 0x44;
+            res[5] = 0x52;
+            res[6] = 0x01;
+            data.CopyTo(res, 7);
+            byte check = 0;
+            for (int i = 1; i < res.Length; i++)
+            {
+                check -= res[i];
+            }
+
+            //var checkbytes = BitConverter.GetBytes((check & 0xffff));
+            res[res.Length - 2] = 0x03;
+            res[res.Length - 1] = check;
+
+            return res;
         }
     }
 }
