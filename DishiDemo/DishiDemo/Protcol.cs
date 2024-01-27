@@ -33,7 +33,7 @@ namespace ComMonitor
                     if (c > 0)
                     {
                         var bytes = new byte[c];
-                        port.Write(bytes, 0, c);
+                        port.Read(bytes, 0, c);
                         ReciveCallback?.Invoke(bytes);
                     }
                     System.Threading.Thread.Sleep(100);
@@ -44,9 +44,12 @@ namespace ComMonitor
         private object locker = new object();
         public void Write(byte[] bs)
         {
-            lock (locker)
+            if (port.IsOpen)
             {
-                port.Write(bs, 0, bs.Length);
+                lock (locker)
+                {
+                    port.Write(bs, 0, bs.Length);
+                }
             }
         }
         public void Close()

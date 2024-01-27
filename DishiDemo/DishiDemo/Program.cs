@@ -1,5 +1,7 @@
 ﻿using ComMonitor;
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 
 namespace DishiDemo
@@ -9,27 +11,49 @@ namespace DishiDemo
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
-            var p = new Protcol { PortName = "" };
+            var p = new Protcol { PortName = "COM4" };
             p.Connect();
-            var cd = new DataSolver(p);
+
+            var _DataSolver = new DataSolver(p);
+            Console.WriteLine("connect ok");
+            while (true)
+            {
+                var cmd = Console.ReadLine();
+                switch (cmd.Trim().ToLower())
+                {
+                    case "r":
+                        _DataSolver.state = 0;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
         }
     }
 
 
     public class DataSolver
     {
-        private int state = 0;
+        internal int state = 0;
         public DataSolver(Protcol protcol)
         {
             p = protcol;
             p.ReciveCallback = Recive;
 
         }
-
+        (double x, double y)[] mlocations = new (double x, double y)[] {
+            (90566.81, 118942.98), (91274.17, 116942.09), (20, 20),
+             //(90566.81, 118942.98), (91274.17, 116942.09), (20, 20),
+             //(90566.81, 118942.98), (91274.17, 116942.09), (20, 20),
+        };
+        private int mindex = 0;
         public Protcol p { get; }
         private bool Finished = false;
         public void Recive(byte[] c)
         {
+            var ress = string.Join(" ", c.Select(i => i.ToString("x")));
+            Console.WriteLine(ress);
             switch (state)
             {
                 case 0:
@@ -38,6 +62,7 @@ namespace DishiDemo
                         state = 1;
                         p.Write(new byte[] { 0x06 });
                         Finished = false;
+                        mindex = 0;
                     }
                     break;
                 case 1:
@@ -51,7 +76,9 @@ namespace DishiDemo
                     if (c[0] == 0x06)
                     {
                         state = 3;
-                        p.Write(new byte[] { 0x73, 0x2F, 0x65, 0x78, 0x70, 0x6F, 0x72, 0x74, 0x2F, 0x50, 0x52, 0x4F, 0x44, 0x2F, 0x2F, 0x33, 0x35, 0x31, 0x63, 0x66, 0x32, 0x34, 0x32, 0x61, 0x5F, 0x38, 0x2E, 0x72, 0x74, 0x0D, 0x52, 0x4D, 0x3D, 0x0D, 0x49, 0x53, 0x3D, 0x4E, 0x4F, 0x52, 0x4D, 0x41, 0x4C, 0x0D, 0x44, 0x49, 0x45, 0x3D, 0x61, 0x31, 0x31, 0x0D, 0x03, 0x9C });
+                        var res = DataSolver.WrapData(new byte[] { 0x73, 0x2F, 0x65, 0x78, 0x70, 0x6F, 0x72, 0x74, 0x2F, 0x50, 0x52, 0x4F, 0x44, 0x2F, 0x2F, 0x33, 0x35, 0x31, 0x63, 0x66, 0x32, 0x34, 0x32, 0x61, 0x5F, 0x38, 0x2E, 0x72, 0x74, 0x0D, 0x52, 0x4D, 0x3D, 0x0D, 0x49, 0x53, 0x3D, 0x4E, 0x4F, 0x52, 0x4D, 0x41, 0x4C, 0x0D, 0x44, 0x49, 0x45, 0x3D, 0x61, 0x31, 0x31, 0x0D });
+                        p.Write(res);
+                        //p.Write(new byte[] { 0x73, 0x2F, 0x65, 0x78, 0x70, 0x6F, 0x72, 0x74, 0x2F, 0x50, 0x52, 0x4F, 0x44, 0x2F, 0x2F, 0x33, 0x35, 0x31, 0x63, 0x66, 0x32, 0x34, 0x32, 0x61, 0x5F, 0x38, 0x2E, 0x72, 0x74, 0x0D, 0x52, 0x4D, 0x3D, 0x0D, 0x49, 0x53, 0x3D, 0x4E, 0x4F, 0x52, 0x4D, 0x41, 0x4C, 0x0D, 0x44, 0x49, 0x45, 0x3D, 0x61, 0x31, 0x31, 0x0D, 0x03, 0x9C });
                     }
                     break;
                 case 3:
@@ -65,7 +92,16 @@ namespace DishiDemo
                         else
                         {
                             var res = DataSolver.WrapData(DataSolver.SingleLineData(1, 1));
-                            //var res = DataSolver.MultiData(new (double, double)[] { (90566.81, 118942.98), (91274.17, 116942.09), (20, 20) });
+
+                            //if (mindex >= mlocations.Length)
+                            //{
+                            //    Finished = true;
+                            //}
+                            //else
+                            //{
+                            //    res = DataSolver.MultiData(new (double, double)[] { mlocations[mindex++], mlocations[mindex++], mlocations[mindex++] });
+                            //}
+
 
                             p.Write(res);
 
@@ -111,12 +147,12 @@ namespace DishiDemo
             var y1 = Convert.ToByte((yi % 100).ToString(), 16);
             var y2 = Convert.ToByte((yi / 100 % 100).ToString(), 16);
             var y3 = Convert.ToByte((yi / 10000 % 100).ToString(), 16);
-            return new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, x1, x2, x3, 0x00, y1, y2, y3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+            return new byte[] {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, x1, x2, x3, 0x00, y1, y2, y3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
         }
 
         public static byte[] WrapData(byte[] data)
         {
-            var dl = data.Length + 1;
+            var dl = data.Length;
             var bytes = System.Text.Encoding.ASCII.GetBytes(dl.ToString());
             var res = new byte[dl + 2 + 2 + 2];
             bytes.CopyTo(res, 2);
@@ -124,8 +160,8 @@ namespace DishiDemo
             res[1] = 0x30;
             res[4] = 0x44;
             res[5] = 0x52;
-            res[6] = 0x01;
-            data.CopyTo(res, 7);
+            //res[6] = 0x01;
+            data.CopyTo(res, 6);
             byte check = 0;
             for (int i = 1; i < res.Length; i++)
             {
