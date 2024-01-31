@@ -22,6 +22,7 @@ namespace Cake.Profile
         [JsonIgnore]
         public string BinOutputDir { get => System.IO.Path.Combine(Dir ?? "", "bin"); }
         public string SVN { get; set; }
+        public string FTPDir { get; set; }
 
         [JsonIgnore]
         public string Version { get => $"{PreVersion}.{Subversion}"; }
@@ -79,6 +80,7 @@ namespace Cake.Profile
             profile.FromSubverion = context.Environment.GetEnvironmentVariable("GO_FROM_REVISION_SVN");
             profile.PreVersion = context.Environment.GetEnvironmentVariable("VERSION");
             profile.SVN = context.Environment.GetEnvironmentVariable("GO_MATERIAL_URL_SVN");
+            profile.FTPDir = context.Environment.GetEnvironmentVariable("ftpdir");
            
             //profile.Dir = context.Environment.WorkingDirectory.FullPath;
             return profile;
