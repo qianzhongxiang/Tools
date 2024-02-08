@@ -7,7 +7,7 @@ using Cake.Common;
 using Newtonsoft.Json;
 using System.Linq;
 
-[assembly:System.Runtime.CompilerServices.InternalsVisibleTo("UnitProfile")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("UnitProfile")]
 namespace Cake.Profile
 {
     public class ProfileItem
@@ -22,10 +22,27 @@ namespace Cake.Profile
         [JsonIgnore]
         public string BinOutputDir { get => System.IO.Path.Combine(Dir ?? "", "bin"); }
         public string SVN { get; set; }
+        /// <summary>
+        /// 上传的FTP地址
+        /// </summary>
         public string FTPDir { get; set; }
+        public string DownloadFilePath { get; set; }
 
         [JsonIgnore]
-        public string Version { get => $"{PreVersion}.{Subversion}"; }
+        public string Version
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Subversion))
+                {
+                    return PreVersion;
+                }
+                else
+                {
+                    return $"{PreVersion}.{Subversion}";
+                }
+            }
+        }
 
         [JsonIgnore]
         public string SVNMsg { get; set; }
@@ -81,7 +98,7 @@ namespace Cake.Profile
             profile.PreVersion = context.Environment.GetEnvironmentVariable("VERSION");
             profile.SVN = context.Environment.GetEnvironmentVariable("GO_MATERIAL_URL_SVN");
             profile.FTPDir = context.Environment.GetEnvironmentVariable("ftpdir");
-           
+            profile.DownloadFilePath = context.Environment.GetEnvironmentVariable("dfp");
             //profile.Dir = context.Environment.WorkingDirectory.FullPath;
             return profile;
         }
