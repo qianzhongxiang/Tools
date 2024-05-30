@@ -81,6 +81,22 @@ namespace Cake.Profile
             }
             return _ProfileItem;
         }
+        [CakeMethodAlias]
+        public static void RemoveProfile(this ICakeContext context, string targetDir)
+        {
+            _ProfileItem = null;
+            var path = System.IO.Path.Combine(targetDir, FILENAME);
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+            }
+            //var dir = System.IO.Path.Combine(targetDir, "bin");
+            //if (System.IO.Directory.Exists(dir))
+            //{
+            //    System.IO.Directory.Delete(dir, true);
+            //}
+        }
+
 
         [CakeMethodAlias]
         public static void SetTargetDir(this ICakeContext context, string targetDir)
