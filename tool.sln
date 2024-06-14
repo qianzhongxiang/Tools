@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.4.33403.182
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32929.386
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComMonitor", "ComMonitor\ComMonitor.csproj", "{78F71626-72DB-46D8-ABD3-0B224138EAB2}"
 EndProject
@@ -15,7 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit", "Unit", "{7F841D3A-D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitDishiDemo", "Unit\UnitDishiDemo\UnitDishiDemo.csproj", "{A4E598AD-977A-48BD-9B07-9FC0E3C8A074}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FTPBatchCleaner", "FTPBatchCleaner\FTPBatchCleaner.csproj", "{67F80AC3-0735-4479-B641-08A8DF1F20BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FTPBatchCleaner", "FTPBatchCleaner\FTPBatchCleaner.csproj", "{67F80AC3-0735-4479-B641-08A8DF1F20BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRedmine", "ProjectRedmine\ProjectRedmine.csproj", "{49C89E63-18B2-4453-8C34-BAB4906E0A48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{67F80AC3-0735-4479-B641-08A8DF1F20BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67F80AC3-0735-4479-B641-08A8DF1F20BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67F80AC3-0735-4479-B641-08A8DF1F20BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49C89E63-18B2-4453-8C34-BAB4906E0A48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49C89E63-18B2-4453-8C34-BAB4906E0A48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49C89E63-18B2-4453-8C34-BAB4906E0A48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49C89E63-18B2-4453-8C34-BAB4906E0A48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
