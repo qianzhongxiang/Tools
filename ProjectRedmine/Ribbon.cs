@@ -80,7 +80,9 @@ namespace ProjectRedmine
 
         private void btnJournal_Click(object sender, RibbonControlEventArgs e)
         {
-            RedmineProvider.GenerateJournal();
+            mSProjectWrapper = new MSProjectWrapper(this.Application.ActiveProject);
+            redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
+            redmineProvider.GenerateJournal(redmineProvider.Projects.Where(p=>p.Name.Contains("VIS 4")||p.Name.Contains("EFEM")));
         }
     }
 }
