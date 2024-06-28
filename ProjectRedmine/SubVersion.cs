@@ -77,15 +77,15 @@ namespace ProjectRedmine
 
                     if (issue.Tracker.Id == SoftDemandId)
                     {
-                        Application_NewProject(DesignTask, issue);
+                        Append(DesignTask, issue);
                     }
                     if (issue.Tracker.Id == FunctionId)
                     {
-                        Application_NewProject(DevelopTask, issue);
+                        Append(DevelopTask, issue);
                     }
                     if (issue.Tracker.Id == CodeMergeId)
                     {
-                        Application_NewProject(TestTask, issue);
+                        Append(TestTask, issue);
                     }
                 }
             }
@@ -143,12 +143,12 @@ namespace ProjectRedmine
                             item.Delete();
                         }
                     }
-                    Application_NewProject(parentTask,issue);
+                    Append(parentTask,issue);
 
                 }
             }
         }
-        int Application_NewProject(MSProject.Task parentTask, Issue issue)
+        int Append(MSProject.Task parentTask, Issue issue)
         {
             //if (addResult.ContainsKey(issue.Id) && addResult[issue.Id])
             //{
@@ -157,8 +157,17 @@ namespace ProjectRedmine
 
             MSProject.Task newTask = Pj.Tasks.Add
             ($"[{issue.Tracker.Name}] {issue.Subject}", parentTask?.ID + 1 ?? System.Type.Missing);
+            newTask.Manual = false;
             newTask.Start = issue.StartDate;
-            newTask.Duration = (issue.EstimatedHours ?? 8) * 60;
+
+            if (issue.EstimatedHours == null || issue.EstimatedHours < 8)
+            {
+                newTask.Duration = 8 * 60;
+            }
+            else
+            {
+                newTask.Duration = issue.EstimatedHours * 60;
+            }
             newTask.ResourceNames = issue.AssignedTo?.Name ?? "";
             newTask.OutlineLevel = 3;
             if (issue.Status.Id == 5)

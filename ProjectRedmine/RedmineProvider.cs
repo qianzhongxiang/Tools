@@ -85,7 +85,7 @@ namespace ProjectRedmine
                 {
                     p1 = doc.CreateParagraph();
                     p1.Alignment = ParagraphAlignment.LEFT;
-                    XWPFHyperlinkRun hyperlinkrun = CreateHyperlinkRun(p1,$"{Host}/issues/{item.Id}");
+                    XWPFHyperlinkRun hyperlinkrun = CreateHyperlinkRun(p1, $"{Host}/issues/{item.Id}");
                     hyperlinkrun.SetText($"{item.Tracker.Name} #{item.Id}");
                     hyperlinkrun.SetColor("0000FF");
                     hyperlinkrun.Underline = UnderlinePatterns.Single;
@@ -130,6 +130,13 @@ namespace ProjectRedmine
             }
         }
 
-
+        public void ChangeTask(int id, DateTime startTime, int spentHours)
+        {
+            var parameters = new NameValueCollection { };
+            var issue = Manager.GetObject<Issue>(id.ToString(), parameters);
+            issue.StartDate = startTime;
+            issue.SpentHours = spentHours;
+            Manager.UpdateObject<Issue>(id.ToString(),issue);
+        }
     }
 }

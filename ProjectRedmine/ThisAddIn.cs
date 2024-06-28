@@ -14,6 +14,7 @@ namespace ProjectRedmine
 {
     public partial class ThisAddIn
     {
+        internal static bool Fresh = false;
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             //var prBar = this.Application.CommandBars.Add("Project Redmine", Office.MsoBarPosition.msoBarTop, false, true);
@@ -37,24 +38,57 @@ namespace ProjectRedmine
             //btnSet.Tag = "Set";
             //btnSet.Style = Office.MsoButtonStyle.msoButtonCaption;
             //btnSet.Click += BtnSet_Click; ;
+            this.Application.ProjectBeforeTaskChange += Application_ProjectBeforeTaskChange;
+            //this.Application.ProjectBeforeTaskChange2 += Application_ProjectBeforeTaskChange2;
         }
+
+        private void Application_ProjectBeforeTaskChange2(MSProject.Task tsk, MSProject.PjField Field, object NewVal, MSProject.EventInfo Info)
+        {
+            if (Fresh)
+            {
+                return;
+            }
+            var res = System.Windows.Forms.MessageBox.Show($"change {tsk.ID}:{tsk.Name}, {Field}", "Info", System.Windows.Forms.MessageBoxButtons.OKCancel);
+            if (res == System.Windows.Forms.DialogResult.OK)
+            {
+                mSProjectWrapper = new MSProjectWrapper(this.Application.ActiveProject);
+                redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
+                redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, tsk.Duration);
+            }
+        }
+
+        private void Application_ProjectBeforeTaskChange(MSProject.Task tsk, MSProject.PjField Field, object NewVal, ref bool Cancel)
+        {
+            if (Fresh)
+            {
+                return;
+            }
+            var res = System.Windows.Forms.MessageBox.Show($"change {tsk.ID}:{tsk.Name}, {Field}", "Info", System.Windows.Forms.MessageBoxButtons.OKCancel);
+            if (res == System.Windows.Forms.DialogResult.OK)
+            {
+                mSProjectWrapper = new MSProjectWrapper(this.Application.ActiveProject);
+                redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
+                redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, tsk.Duration);
+            }
+        }
+
+
 
         private void BtnSet_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
         {
             new SetDialog(new MSProjectWrapper(this.Application.ActiveProject)).ShowDialog();
-            //this.Application.ActiveProject.Comments = "VIS 4;4.3";
         }
 
         private void BtnRefresh_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
         {
-      
+
         }
 
         RedmineProvider redmineProvider;
         MSProjectWrapper mSProjectWrapper;
         private void Button_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
         {
-           
+
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
@@ -74,9 +108,9 @@ namespace ProjectRedmine
         }
         protected override IRibbonExtension[] CreateRibbonObjects()
         {
-            return new IRibbonExtension[] { new Ribbon() {} };
+            return new IRibbonExtension[] { new Ribbon() { } };
         }
-       
+
 
         #endregion
     }
