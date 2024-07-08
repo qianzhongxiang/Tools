@@ -135,7 +135,7 @@ namespace ProjectRedmine
             var parameters = new NameValueCollection { };
             var issue = Manager.GetObject<Issue>(id.ToString(), parameters);
             issue.StartDate = startTime;
-            issue.SpentHours = spentHours;
+            issue.EstimatedHours = spentHours/60;
             Manager.UpdateObject<Issue>(id.ToString(),issue);
         }
     }

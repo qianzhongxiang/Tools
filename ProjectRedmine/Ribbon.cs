@@ -27,11 +27,8 @@ namespace ProjectRedmine
                     System.Windows.Forms.MessageBox.Show("please set version first");
                     return;
                 }
-                this.Application.CustomFieldRename(MSProject.PjCustomField.pjCustomTaskText1, "RedmineStatus");
-                this.Application.CustomFieldRename(MSProject.PjCustomField.pjCustomTaskText2, "Creator");
-                this.Application.CustomFieldRename(MSProject.PjCustomField.pjCustomTaskNumber1, "IssueID");
                 //redmineProvider = new RedmineProvider(this.Application.ActiveProject.Comments as string);
-                mSProjectWrapper = new MSProjectWrapper(this.Application.ActiveProject);
+                mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
                 redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
 
                 var tasks = this.Application.ActiveProject.Tasks;
@@ -71,7 +68,7 @@ namespace ProjectRedmine
                     System.Windows.Forms.MessageBox.Show("please set version first");
                     return;
                 }
-                mSProjectWrapper = new MSProjectWrapper(this.Application.ActiveProject);
+                mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
                 if (mSProjectWrapper.UpdateTime is null)
                 {
                     System.Windows.Forms.MessageBox.Show("please LoadData first");
@@ -101,14 +98,31 @@ namespace ProjectRedmine
 
         private void btnConfig_Click(object sender, RibbonControlEventArgs e)
         {
-            new SetDialog(new MSProjectWrapper(this.Application.ActiveProject)).ShowDialog();
+            new SetDialog(MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject)).ShowDialog();
+            this.Application.CustomFieldRename(MSProject.PjCustomField.pjCustomTaskText1, "RedmineStatus");
+            this.Application.CustomFieldRename(MSProject.PjCustomField.pjCustomTaskText2, "Creator");
+            this.Application.CustomFieldRename(MSProject.PjCustomField.pjCustomTaskNumber1, "IssueID");
         }
 
         private void btnJournal_Click(object sender, RibbonControlEventArgs e)
         {
-            mSProjectWrapper = new MSProjectWrapper(this.Application.ActiveProject);
+            mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
             redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
             redmineProvider.GenerateJournal(redmineProvider.Projects.Where(p => p.Name.Contains("VIS 4") || p.Name.Contains("EFEM")));
+        }
+
+        private void btnTest_Click(object sender, RibbonControlEventArgs e)
+        {
+            if (this.Application.ActiveSelection.Tasks.Count == 0)
+            {
+                return;
+            }
+            foreach (MSProject.Task t in this.Application.ActiveSelection.Tasks)
+            {
+                mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
+                redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
+                redmineProvider.ChangeTask((int)t.Number1, (DateTime)t.Start, t.Duration);
+            }
         }
     }
 }

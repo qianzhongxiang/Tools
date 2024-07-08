@@ -37,24 +37,39 @@ namespace ProjectRedmine
             //btnSet.Caption = "Set";
             //btnSet.Tag = "Set";
             //btnSet.Style = Office.MsoButtonStyle.msoButtonCaption;
-            //btnSet.Click += BtnSet_Click; ;
+            //btnSet.Click += BtnSet_Click; 
             this.Application.ProjectBeforeTaskChange += Application_ProjectBeforeTaskChange;
-            //this.Application.ProjectBeforeTaskChange2 += Application_ProjectBeforeTaskChange2;
+            this.Application.ProjectBeforeResourceChange += Application_ProjectBeforeResourceChange;
+            this.Application.ProjectBeforeTaskNew += Application_ProjectBeforeTaskNew;
+            this.Application.NewProject += Application_NewProject;
         }
 
-        private void Application_ProjectBeforeTaskChange2(MSProject.Task tsk, MSProject.PjField Field, object NewVal, MSProject.EventInfo Info)
+     
+
+        private void ActiveProject_Open(MSProject.Project pj)
         {
-            if (Fresh)
+        }
+
+        private void ActiveProject_Change(MSProject.Project pj)
+        {
+        }
+
+        private void Application_NewProject(MSProject.Project pj)
+        {
+
+            if (MSProjectWrapper.CreateOrNewWrapper(pj) != null)
             {
-                return;
+                pj.Change += ActiveProject_Change;
+                pj.Open += ActiveProject_Open;
             }
-            var res = System.Windows.Forms.MessageBox.Show($"change {tsk.ID}:{tsk.Name}, {Field}", "Info", System.Windows.Forms.MessageBoxButtons.OKCancel);
-            if (res == System.Windows.Forms.DialogResult.OK)
-            {
-                mSProjectWrapper = new MSProjectWrapper(this.Application.ActiveProject);
-                redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
-                redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, tsk.Duration);
-            }
+        }
+
+        private void Application_ProjectBeforeTaskNew(MSProject.Project pj, ref bool Cancel)
+        {
+        }
+
+        private void Application_ProjectBeforeResourceChange(MSProject.Resource res, MSProject.PjField Field, object NewVal, ref bool Cancel)
+        {
         }
 
         private void Application_ProjectBeforeTaskChange(MSProject.Task tsk, MSProject.PjField Field, object NewVal, ref bool Cancel)
@@ -63,11 +78,15 @@ namespace ProjectRedmine
             {
                 return;
             }
+            if (tsk.ID == 0)
+            {
+                return;
+            }
             var res = System.Windows.Forms.MessageBox.Show($"change {tsk.ID}:{tsk.Name}, {Field}", "Info", System.Windows.Forms.MessageBoxButtons.OKCancel);
             if (res == System.Windows.Forms.DialogResult.OK)
             {
-                mSProjectWrapper = new MSProjectWrapper(this.Application.ActiveProject);
-                redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
+                mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
+                redmineProvider = mSProjectWrapper.RedmineProvider;
                 redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, tsk.Duration);
             }
         }
@@ -76,7 +95,7 @@ namespace ProjectRedmine
 
         private void BtnSet_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
         {
-            new SetDialog(new MSProjectWrapper(this.Application.ActiveProject)).ShowDialog();
+            new SetDialog(MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject)).ShowDialog();
         }
 
         private void BtnRefresh_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)

@@ -9,13 +9,33 @@ namespace ProjectRedmine
 {
     public class MSProjectWrapper
     {
+        public static Dictionary<Project, MSProjectWrapper> Wrappers { get; set; }
+
+        public static MSProjectWrapper CreateOrNewWrapper(Microsoft.Office.Interop.MSProject.Project pj)
+        {
+            if (Wrappers.ContainsKey(pj))
+            {
+                return Wrappers[pj];
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(pj.Comments))
+                {
+                    return default;
+                }
+                var w = new MSProjectWrapper(pj);
+                Wrappers.Add(pj, w);
+                return w;
+            }
+        }
+        public RedmineProvider RedmineProvider { get; set; }
         public Project Pj { get; }
         public string Version { get; set; }
         public string RedmineProj { get; set; }
         public DateTime? UpdateTime { get; set; }
         public string UpdateTimeStr => UpdateTime.HasValue ? UpdateTime.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ") : "";
 
-        public MSProjectWrapper(Microsoft.Office.Interop.MSProject.Project pj)
+        private MSProjectWrapper(Microsoft.Office.Interop.MSProject.Project pj)
         {
             if (pj is null)
             {
@@ -36,6 +56,7 @@ namespace ProjectRedmine
                     UpdateTime = DateTime.Parse(comments[2]);
                 }
             }
+            RedmineProvider = new RedmineProvider(RedmineProj, Version);
         }
         public void SaveParameters()
         {

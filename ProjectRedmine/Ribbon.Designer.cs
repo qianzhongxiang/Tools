@@ -41,6 +41,7 @@ namespace ProjectRedmine
             this.btnRefresh = this.Factory.CreateRibbonButton();
             this.btnUpdate = this.Factory.CreateRibbonButton();
             this.btnJournal = this.Factory.CreateRibbonButton();
+            this.btnTest = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.SuspendLayout();
@@ -54,6 +55,7 @@ namespace ProjectRedmine
             // 
             // group1
             // 
+            this.group1.Items.Add(this.btnTest);
             this.group1.Items.Add(this.btnConfig);
             this.group1.Items.Add(this.btnRefresh);
             this.group1.Items.Add(this.btnUpdate);
@@ -93,6 +95,14 @@ namespace ProjectRedmine
             this.btnJournal.ShowImage = true;
             this.btnJournal.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnJournal_Click);
             // 
+            // btnTest
+            // 
+            this.btnTest.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnTest.Label = "test";
+            this.btnTest.Name = "btnTest";
+            this.btnTest.ShowImage = true;
+            this.btnTest.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnTest_Click);
+            // 
             // Ribbon
             // 
             this.Name = "Ribbon";
@@ -115,6 +125,7 @@ namespace ProjectRedmine
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnRefresh;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnUpdate;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnJournal;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btnTest;
     }
 
     partial class ThisRibbonCollection
