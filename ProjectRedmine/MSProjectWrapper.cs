@@ -9,7 +9,7 @@ namespace ProjectRedmine
 {
     public class MSProjectWrapper
     {
-        public static Dictionary<Project, MSProjectWrapper> Wrappers { get; set; }
+        public static Dictionary<Project, MSProjectWrapper> Wrappers { get; set; } = new Dictionary<Project, MSProjectWrapper>();
 
         public static MSProjectWrapper CreateOrNewWrapper(Microsoft.Office.Interop.MSProject.Project pj)
         {
