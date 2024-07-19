@@ -1,6 +1,8 @@
 ﻿using Microsoft.Office.Tools.Ribbon;
+using Redmine.Net.Api;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using MSProject = Microsoft.Office.Interop.MSProject;
@@ -37,7 +39,7 @@ namespace ProjectRedmine
                 {
                     tasks[c].Delete();
                 }
-                var now = DateTime.Now;
+                var now = DateTime.UtcNow;
                 foreach (var item in redmineProvider.Versions)
                 {
                     var subv = new SubVersion(mSProjectWrapper, item, redmineProvider);
@@ -76,7 +78,8 @@ namespace ProjectRedmine
                 }
                 redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
 
-                var now = DateTime.Now;
+                var now = DateTime.UtcNow;
+
                 foreach (var item in redmineProvider.Versions)
                 {
                     var subv = new SubVersion(mSProjectWrapper, item, redmineProvider);
@@ -121,7 +124,7 @@ namespace ProjectRedmine
             {
                 mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
                 redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
-                redmineProvider.ChangeTask((int)t.Number1, (DateTime)t.Start, t.Duration);
+                redmineProvider.ChangeTask((int)t.Number1, (DateTime)t.Start, t.Duration,t);
             }
         }
     }

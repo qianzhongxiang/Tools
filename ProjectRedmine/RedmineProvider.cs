@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MSProject = Microsoft.Office.Interop.MSProject;
 
 namespace ProjectRedmine
 {
@@ -130,13 +131,28 @@ namespace ProjectRedmine
             }
         }
 
-        public void ChangeTask(int id, DateTime startTime, int spentHours)
+        public void ChangeTask(int id, DateTime startTime, int spentHours, MSProject.Task tsk)
         {
+            System.Diagnostics.Debug.WriteLine($"{id},{startTime},{spentHours / 60}");
             var parameters = new NameValueCollection { };
             var issue = Manager.GetObject<Issue>(id.ToString(), parameters);
             issue.StartDate = startTime;
-            issue.EstimatedHours = spentHours/60;
-            Manager.UpdateObject<Issue>(id.ToString(),issue);
+            issue.EstimatedHours = spentHours / 60;
+            Manager.UpdateObject<Issue>(id.ToString(), issue);
+            issue = Manager.GetObject<Issue>(id.ToString(), parameters);
+            ThisAddIn.Fresh = true;
+            tsk.Start = issue.StartDate;
+
+            if (issue.EstimatedHours == null || issue.EstimatedHours < 8)
+            {
+                tsk.Duration = 8 * 60;
+            }
+            else
+            {
+                tsk.Duration = issue.EstimatedHours * 60;
+            }
+            ThisAddIn.Fresh = false;
+
         }
     }
 }

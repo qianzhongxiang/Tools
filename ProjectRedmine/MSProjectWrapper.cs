@@ -34,7 +34,7 @@ namespace ProjectRedmine
         public string RedmineProj { get; set; }
         public DateTime? UpdateTime { get; set; }
         public string UpdateTimeStr => UpdateTime.HasValue ? UpdateTime.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ") : "";
-
+        public Dictionary<string, SubVersion> Versions = new Dictionary<string, SubVersion>();
         private MSProjectWrapper(Microsoft.Office.Interop.MSProject.Project pj)
         {
             if (pj is null)

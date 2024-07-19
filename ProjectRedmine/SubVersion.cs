@@ -14,6 +14,7 @@ namespace ProjectRedmine
     public class SubVersion
     {
         public MSProject.Task MainTask { get; set; }
+        public MSProject.Task DemandTask { get; set; }
         public MSProject.Task DesignTask { get; set; }
         public MSProject.Task DevelopTask { get; set; }
         public MSProject.Task TestTask { get; set; }
@@ -21,9 +22,10 @@ namespace ProjectRedmine
         public MSProjectWrapper MSProjectWrapper { get; }
         public Redmine.Net.Api.Types.Version Version { get; }
         public RedmineProvider RedmineProvider { get; }
-        public const int SoftDemandId = 7;
+        public const int DesignId = 7;
         public const int FunctionId = 2;
         public const int CodeMergeId = 6;
+        public const int DemandId = 4;
         public const int IssueId = 1;
 
         public SubVersion(MSProjectWrapper mSProjectWrapper, Redmine.Net.Api.Types.Version version, RedmineProvider redmineProvider)
@@ -34,11 +36,16 @@ namespace ProjectRedmine
             RedmineProvider = redmineProvider;
             this.Manager = redmineProvider.Manager;
         }
+     
         public void Create()
         {
             MainTask = Pj.Tasks.Add
                        (Version.Name, System.Type.Missing);
             MainTask.OutlineLevel = 1;
+
+            DemandTask = Pj.Tasks.Add
+         ("demand", System.Type.Missing);
+            DemandTask.OutlineLevel = 2;
 
             DesignTask = Pj.Tasks.Add
            ("design", System.Type.Missing);
@@ -58,7 +65,7 @@ namespace ProjectRedmine
         {
             var isP = new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN }, { RedmineKeys.INCLUDE, RedmineKeys.PARENT } };
             isP.Add(RedmineKeys.PROJECT_ID, RedmineProvider.Project.Id.ToString());
-            isP.Add(RedmineKeys.TRACKER_IDS, $"{SoftDemandId}|{FunctionId}|{CodeMergeId}");
+            isP.Add(RedmineKeys.TRACKER_IDS, $"{DesignId}|{DemandId}|{FunctionId}|{CodeMergeId}");
             isP.Add(RedmineKeys.FIXED_VERSION_ID, Version.Id.ToString());
             isP.Add(RedmineKeys.STATUS_ID, RedmineKeys.ALL);
             var issues = Manager.GetObjects<Issue>(isP);
@@ -74,8 +81,11 @@ namespace ProjectRedmine
                     //        continue;
                     //    }
                     //}
-
-                    if (issue.Tracker.Id == SoftDemandId)
+                    if (issue.Tracker.Id == DemandId)
+                    {
+                        Append(DemandTask, issue);
+                    }
+                    if (issue.Tracker.Id == DesignId)
                     {
                         Append(DesignTask, issue);
                     }
@@ -89,18 +99,18 @@ namespace ProjectRedmine
                     }
                 }
             }
-           (Pj.Comments as string).Split(';');
         }
         public void UpdateTasks()
         {
             var isP = new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN }, { RedmineKeys.INCLUDE, RedmineKeys.PARENT } };
             isP.Add(RedmineKeys.PROJECT_ID, RedmineProvider.Project.Id.ToString());
-            isP.Add(RedmineKeys.TRACKER_IDS, $"{SoftDemandId}|{FunctionId}|{CodeMergeId}");
+            isP.Add(RedmineKeys.TRACKER_IDS, $"{DesignId}|{DemandId}|{FunctionId}|{CodeMergeId}");
             isP.Add(RedmineKeys.FIXED_VERSION_ID, Version.Id.ToString());
             isP.Add(RedmineKeys.STATUS_ID, RedmineKeys.ALL);
-            //isP.Add(RedmineKeys.UPDATED_ON, $">={MSProjectWrapper.UpdateTimeStr}");
-            var testDate = DateTime.Now.Subtract(TimeSpan.FromDays(2)).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
-            isP.Add(RedmineKeys.UPDATED_ON, $">={testDate}");
+            var now = DateTime.UtcNow;
+            isP.Add(RedmineKeys.UPDATED_ON, $">={MSProjectWrapper.UpdateTimeStr}");
+            //var testDate = DateTime.Now.Subtract(TimeSpan.FromDays(2)).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
+            //isP.Add(RedmineKeys.UPDATED_ON, $">={testDate}");
             var issues = Manager.GetObjects<Issue>(isP);
             if (issues != null)
             {
@@ -110,7 +120,10 @@ namespace ProjectRedmine
                     var stepTaskName = "";
                     switch (issue.Tracker.Id)
                     {
-                        case SoftDemandId:
+                        case DemandId:
+                            stepTaskName = "demand";
+                            break;
+                        case DesignId:
                             stepTaskName = "design";
                             break;
                         case FunctionId:
@@ -127,23 +140,27 @@ namespace ProjectRedmine
                         continue;
                     }
                     bool versionOk = false;
-                    MSProject.Task parentTask=null;
+                    MSProject.Task parentTask = null;
                     foreach (Microsoft.Office.Interop.MSProject.Task item in Pj.Tasks)
                     {
                         if (item.Name == version)
                         {
                             versionOk = true;
                         }
-                        if (versionOk&& item.Name==stepTaskName)
+                        if (versionOk && item.Name == stepTaskName)
                         {
                             parentTask = item;
                         }
                         if (item.Number1 == issue.Id)
                         {
                             item.Delete();
+                            if (parentTask != null)
+                            {
+                                break;
+                            }
                         }
                     }
-                    Append(parentTask,issue);
+                    Append(parentTask, issue);
 
                 }
             }
@@ -170,13 +187,15 @@ namespace ProjectRedmine
             }
             newTask.ResourceNames = issue.AssignedTo?.Name ?? "";
             newTask.OutlineLevel = 3;
-            if (issue.Status.Id == 5)
+            if (issue.Status.Id == 5|| issue.Status.Id==6)
             {
                 newTask.PercentComplete = 100;
             }
             else
             {
-                newTask.PercentComplete = issue.DoneRatio ?? 0;
+                var precent = issue.DoneRatio ?? 0;
+
+                newTask.PercentComplete = precent==100?99:precent;
             }
             newTask.Text1 = issue.Status.Name;
             newTask.Text2 = issue.Author.Name;

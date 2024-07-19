@@ -44,7 +44,7 @@ namespace ProjectRedmine
             this.Application.NewProject += Application_NewProject;
         }
 
-     
+
 
         private void ActiveProject_Open(MSProject.Project pj)
         {
@@ -82,13 +82,74 @@ namespace ProjectRedmine
             {
                 return;
             }
-            var res = System.Windows.Forms.MessageBox.Show($"change {tsk.ID}:{tsk.Name}, {Field}", "Info", System.Windows.Forms.MessageBoxButtons.OKCancel);
-            if (res == System.Windows.Forms.DialogResult.OK)
+            if (tsk.Name.StartsWith("[需求]"))
             {
-                mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
-                redmineProvider = mSProjectWrapper.RedmineProvider;
-                redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, tsk.Duration);
+                Cancel = true;
+                var res = System.Windows.Forms.MessageBox.Show($"the demand task cannot be changed {tsk.ID}:{tsk.Name}, {Field} {NewVal}", "Info", System.Windows.Forms.MessageBoxButtons.OK);
             }
+            switch (Field)
+            {
+                case MSProject.PjField.pjTaskConstraintType:
+                    return;
+                case MSProject.PjField.pjTaskStartText:
+                case MSProject.PjField.pjTaskActualStart:
+                    mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
+                    redmineProvider = mSProjectWrapper.RedmineProvider;
+                    switch (NewVal)
+                    {
+                        case DateTime dt:
+                            redmineProvider.ChangeTask((int)tsk.Number1, dt, tsk.Duration, tsk);
+                            break;
+                        case string sd:
+                            redmineProvider.ChangeTask((int)tsk.Number1, DateTime.Parse(sd), tsk.Duration, tsk);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case MSProject.PjField.pjTaskFixedDuration:
+                case MSProject.PjField.pjTaskActualDuration:
+                case MSProject.PjField.pjTaskDuration:
+                case MSProject.PjField.pjTaskDurationText:
+                    mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
+                    redmineProvider = mSProjectWrapper.RedmineProvider;
+                    switch (NewVal)
+                    {
+                        case string strVal:
+                            if (strVal.Contains('d'))
+                            {
+                                var d = double.Parse(strVal.Split('d')[0]);
+                                redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)d * 8 * 60, tsk);
+                            }
+                            else if (strVal.Contains('h'))
+                            {
+                                var h = double.Parse(strVal.Split('h')[0]);
+                                redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)h * 60, tsk);
+                            }
+                            break;
+                        case decimal mins:
+                            redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)mins, tsk);
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+                default:
+                    return;
+            }
+
+            //var res = System.Windows.Forms.MessageBox.Show($"change {tsk.ID}:{tsk.Name}, {Field}", "Info", System.Windows.Forms.MessageBoxButtons.OKCancel);
+            //if (res == System.Windows.Forms.DialogResult.OK)
+            //{
+            //mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
+            //redmineProvider = mSProjectWrapper.RedmineProvider;
+            //redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, tsk.Duration);
+            //}
+            //else
+            //{
+            //    Cancel = true;
+            //}
         }
 
 
