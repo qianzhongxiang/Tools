@@ -36,7 +36,7 @@ namespace ProjectRedmine
             RedmineProvider = redmineProvider;
             this.Manager = redmineProvider.Manager;
         }
-     
+
         public void Create()
         {
             MainTask = Pj.Tasks.Add
@@ -63,7 +63,11 @@ namespace ProjectRedmine
 
         public void AddSubTasks()
         {
-            var isP = new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN }, { RedmineKeys.INCLUDE, RedmineKeys.PARENT } };
+            var isP = new NameValueCollection {
+                { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN },
+                { RedmineKeys.INCLUDE, RedmineKeys.PARENT },
+                { RedmineKeys.INCLUDE, RedmineKeys.TIME_ENTRY }
+            };
             isP.Add(RedmineKeys.PROJECT_ID, RedmineProvider.Project.Id.ToString());
             isP.Add(RedmineKeys.TRACKER_IDS, $"{DesignId}|{DemandId}|{FunctionId}|{CodeMergeId}");
             isP.Add(RedmineKeys.FIXED_VERSION_ID, Version.Id.ToString());
@@ -187,7 +191,7 @@ namespace ProjectRedmine
             }
             newTask.ResourceNames = issue.AssignedTo?.Name ?? "";
             newTask.OutlineLevel = 3;
-            if (issue.Status.Id == 5|| issue.Status.Id==6)
+            if (issue.Status.Id == 5 || issue.Status.Id == 6)
             {
                 newTask.PercentComplete = 100;
             }
@@ -195,7 +199,7 @@ namespace ProjectRedmine
             {
                 var precent = issue.DoneRatio ?? 0;
 
-                newTask.PercentComplete = precent==100?99:precent;
+                newTask.PercentComplete = precent == 100 ? 99 : precent;
             }
             newTask.Text1 = issue.Status.Name;
             newTask.Text2 = issue.Author.Name;

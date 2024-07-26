@@ -92,7 +92,14 @@ namespace ProjectRedmine
                     hyperlinkrun.Underline = UnderlinePatterns.Single;
                     r1 = p1.CreateRun();
                     r1.SetText($" {item.Subject}");
-                    r1.FontSize = 11;
+                    r1.FontSize = 13;
+
+                    p1 = doc.CreateParagraph();
+                    p1.IndentationLeft = 350;
+                    p1.Alignment = ParagraphAlignment.LEFT;
+                    r1 = p1.CreateRun();
+                    r1.FontSize = 9;
+                    r1.SetText($" {item.Description}");
                 }
 
                 XWPFParagraph p2 = doc.CreateParagraph();
