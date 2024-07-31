@@ -42,9 +42,12 @@ namespace ProjectRedmine
                 var now = DateTime.UtcNow;
                 foreach (var item in redmineProvider.Versions)
                 {
-                    var subv = new SubVersion(mSProjectWrapper, item, redmineProvider);
-                    subv.Create();
-                    subv.AddSubTasks();
+                    if (item.Status== Redmine.Net.Api.Types.VersionStatus.Open)
+                    {
+                        var subv = new SubVersion(mSProjectWrapper, item, redmineProvider);
+                        subv.Create();
+                        subv.AddSubTasks();
+                    }
                 }
                 mSProjectWrapper.UpdateTime = now;
                 mSProjectWrapper.SaveParameters();
@@ -62,40 +65,17 @@ namespace ProjectRedmine
 
         private void btnUpdate_Click(object sender, RibbonControlEventArgs e)
         {
-            ThisAddIn.Fresh = true;
-            try
-            {
-                if (this.Application.ActiveProject.Comments is null)
-                {
-                    System.Windows.Forms.MessageBox.Show("please set version first");
-                    return;
-                }
-                mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
-                if (mSProjectWrapper.UpdateTime is null)
-                {
-                    System.Windows.Forms.MessageBox.Show("please LoadData first");
-                    return;
-                }
-                redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
+            var tasks = this.Application.ActiveSelection.Tasks;
 
-                var now = DateTime.UtcNow;
-
-                foreach (var item in redmineProvider.Versions)
+            foreach (MSProject.Task item in tasks)
+            {
+                if (item.Number1!=0)
                 {
-                    var subv = new SubVersion(mSProjectWrapper, item, redmineProvider);
-                    subv.UpdateTasks();
-                }
-                mSProjectWrapper.UpdateTime = now;
-                mSProjectWrapper.SaveParameters();
-            }
-            catch (Exception)
-            {
 
-                throw;
-            }
-            finally
-            {
-                ThisAddIn.Fresh = false;
+                }
+
+                string target = $"{RedmineProvider.Host}/issues/{item.Number1}";
+                System.Diagnostics.Process.Start(target);
             }
         }
 
@@ -124,8 +104,24 @@ namespace ProjectRedmine
             {
                 mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
                 redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
-                redmineProvider.ChangeTask((int)t.Number1, (DateTime)t.Start, t.Duration,t);
+                redmineProvider.ChangeTask((int)t.Number1, (DateTime)t.Start, t.Duration, t);
             }
+        }
+
+        private void btnURL_Click(object sender, RibbonControlEventArgs e)
+        {
+            var tasks = this.Application.ActiveSelection.Tasks;
+            if (tasks.Count != 1)
+            {
+                System.Windows.Forms.MessageBox.Show("Please only one task");
+                return;
+            }
+            foreach (MSProject.Task item in tasks)
+            {
+                string target = $"{RedmineProvider.Host}/issues/{item.Number1}";
+                System.Diagnostics.Process.Start(target);
+            }
+
         }
     }
 }

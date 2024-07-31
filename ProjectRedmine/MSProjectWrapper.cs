@@ -63,5 +63,41 @@ namespace ProjectRedmine
             Pj.Comments = $"{RedmineProj};{Version};{UpdateTimeStr}";
         }
 
+        public void Update()
+        {
+            ThisAddIn.Fresh = true;
+            try
+            {
+                if (Pj.Comments is null)
+                {
+                    return;
+                }
+                if (UpdateTime is null)
+                {
+                    System.Windows.Forms.MessageBox.Show("please LoadData first");
+                    return;
+                }
+
+                var now = DateTime.UtcNow;
+
+                foreach (var item in RedmineProvider.Versions)
+                {
+                    var subv = new SubVersion(this, item, RedmineProvider);
+                    subv.UpdateTasks();
+                }
+                UpdateTime = now;
+                SaveParameters();
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                ThisAddIn.Fresh = false;
+            }
+        }
+
     }
 }

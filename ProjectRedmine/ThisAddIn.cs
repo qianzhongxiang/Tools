@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using MSProject = Microsoft.Office.Interop.MSProject;
 using Office = Microsoft.Office.Core;
@@ -42,6 +43,28 @@ namespace ProjectRedmine
             this.Application.ProjectBeforeResourceChange += Application_ProjectBeforeResourceChange;
             this.Application.ProjectBeforeTaskNew += Application_ProjectBeforeTaskNew;
             this.Application.NewProject += Application_NewProject;
+
+
+            Task.Run(delegate
+            {
+                while (true)
+                {
+                    try
+                    {
+                        if (this.Application.ActiveProject != null)
+                        {
+                            var wrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
+                            wrapper.Update();
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+
+                    System.Threading.Thread.Sleep(60000);
+                }
+            });
         }
 
 
@@ -106,6 +129,7 @@ namespace ProjectRedmine
                         default:
                             break;
                     }
+
                     break;
                 case MSProject.PjField.pjTaskFixedDuration:
                 case MSProject.PjField.pjTaskActualDuration:
@@ -116,16 +140,13 @@ namespace ProjectRedmine
                     switch (NewVal)
                     {
                         case string strVal:
-                            if (strVal.Contains('d'))
-                            {
-                                var d = double.Parse(strVal.Split('d')[0]);
-                                redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)d * 8 * 60, tsk);
-                            }
-                            else if (strVal.Contains('h'))
-                            {
-                                var h = double.Parse(strVal.Split('h')[0]);
-                                redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)h * 60, tsk);
-                            }
+                            var d = double.Parse(strVal.Split('d')[0]);
+                            redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)d * 8 * 60, tsk);
+                            //else if (strVal.Contains('h'))
+                            //{
+                            //    var h = double.Parse(strVal.Split('h')[0]);
+                            //    redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)h * 60, tsk);
+                            //}
                             break;
                         case decimal mins:
                             redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)mins, tsk);

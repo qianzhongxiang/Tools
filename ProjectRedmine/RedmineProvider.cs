@@ -137,7 +137,10 @@ namespace ProjectRedmine
                 }
             }
         }
+        public static void Update(int issueId)
+        {
 
+        }
         public void ChangeTask(int id, DateTime startTime, int spentHours, MSProject.Task tsk)
         {
             System.Diagnostics.Debug.WriteLine($"{id},{startTime},{spentHours / 60}");
@@ -146,20 +149,6 @@ namespace ProjectRedmine
             issue.StartDate = startTime;
             issue.EstimatedHours = spentHours / 60;
             Manager.UpdateObject<Issue>(id.ToString(), issue);
-            issue = Manager.GetObject<Issue>(id.ToString(), parameters);
-            ThisAddIn.Fresh = true;
-            tsk.Start = issue.StartDate;
-
-            if (issue.EstimatedHours == null || issue.EstimatedHours < 8)
-            {
-                tsk.Duration = 8 * 60;
-            }
-            else
-            {
-                tsk.Duration = issue.EstimatedHours * 60;
-            }
-            ThisAddIn.Fresh = false;
-
         }
     }
 }

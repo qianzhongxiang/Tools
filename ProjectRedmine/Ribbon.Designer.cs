@@ -37,11 +37,12 @@ namespace ProjectRedmine
         {
             this.tab1 = this.Factory.CreateRibbonTab();
             this.group1 = this.Factory.CreateRibbonGroup();
+            this.btnTest = this.Factory.CreateRibbonButton();
             this.btnConfig = this.Factory.CreateRibbonButton();
             this.btnRefresh = this.Factory.CreateRibbonButton();
             this.btnUpdate = this.Factory.CreateRibbonButton();
             this.btnJournal = this.Factory.CreateRibbonButton();
-            this.btnTest = this.Factory.CreateRibbonButton();
+            this.btnURL = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.SuspendLayout();
@@ -59,9 +60,18 @@ namespace ProjectRedmine
             this.group1.Items.Add(this.btnConfig);
             this.group1.Items.Add(this.btnRefresh);
             this.group1.Items.Add(this.btnUpdate);
+            this.group1.Items.Add(this.btnURL);
             this.group1.Items.Add(this.btnJournal);
             this.group1.Label = "Setting";
             this.group1.Name = "group1";
+            // 
+            // btnTest
+            // 
+            this.btnTest.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnTest.Label = "test";
+            this.btnTest.Name = "btnTest";
+            this.btnTest.ShowImage = true;
+            this.btnTest.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnTest_Click);
             // 
             // btnConfig
             // 
@@ -95,13 +105,13 @@ namespace ProjectRedmine
             this.btnJournal.ShowImage = true;
             this.btnJournal.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnJournal_Click);
             // 
-            // btnTest
+            // btnURL
             // 
-            this.btnTest.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.btnTest.Label = "test";
-            this.btnTest.Name = "btnTest";
-            this.btnTest.ShowImage = true;
-            this.btnTest.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnTest_Click);
+            this.btnURL.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnURL.Label = "OpenURL";
+            this.btnURL.Name = "btnURL";
+            this.btnURL.ShowImage = true;
+            this.btnURL.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnURL_Click);
             // 
             // Ribbon
             // 
@@ -126,6 +136,7 @@ namespace ProjectRedmine
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnUpdate;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnJournal;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnTest;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btnURL;
     }
 
     partial class ThisRibbonCollection
