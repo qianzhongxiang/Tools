@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32929.386
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComMonitor", "ComMonitor\ComMonitor.csproj", "{78F71626-72DB-46D8-ABD3-0B224138EAB2}"
 EndProject
@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FTPBatchCleaner", "FTPBatch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRedmine", "ProjectRedmine\ProjectRedmine.csproj", "{49C89E63-18B2-4453-8C34-BAB4906E0A48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureSimulator", "SecureSimulator\SecureSimulator.csproj", "{318D6980-EA3A-4D5C-9786-1564BBBCE571}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecureSimulator", "SecureSimulator\SecureSimulator.csproj", "{318D6980-EA3A-4D5C-9786-1564BBBCE571}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NugetPackageUploader", "NugetPackageUploader\NugetPackageUploader.csproj", "{12AA91CB-266D-4728-B9B5-9DA9AA2E1140}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{318D6980-EA3A-4D5C-9786-1564BBBCE571}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{318D6980-EA3A-4D5C-9786-1564BBBCE571}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{318D6980-EA3A-4D5C-9786-1564BBBCE571}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12AA91CB-266D-4728-B9B5-9DA9AA2E1140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12AA91CB-266D-4728-B9B5-9DA9AA2E1140}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12AA91CB-266D-4728-B9B5-9DA9AA2E1140}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12AA91CB-266D-4728-B9B5-9DA9AA2E1140}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

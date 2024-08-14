@@ -18,7 +18,7 @@ namespace ProjectRedmine
         public Project Project { get; set; }
         public List<Redmine.Net.Api.Types.Version> Versions { get; set; }
         public List<Redmine.Net.Api.Types.Project> Projects { get; set; }
-        public const int SoftDemandId = 7;
+        public const int DesignId = 7;
         public const int FunctionId = 2;
         public const int CodeMergeId = 6;
         public const int IssueId = 1;
@@ -54,7 +54,7 @@ namespace ProjectRedmine
             var start = DateTime.Now.Subtract(TimeSpan.FromDays(7));
             var startTime = start.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
             parameters.Add(RedmineKeys.SPENT_ON, $">={startTime}");
-            parameters.Add("issue.tracker_id", FunctionId.ToString());
+            parameters.Add("issue.tracker_id", $"{FunctionId}|{DesignId}");
 
             var times = Manager.GetObjects<TimeEntry>(parameters);
             var issues = times.Select(t => t.Issue).GroupBy(t => t.Id);

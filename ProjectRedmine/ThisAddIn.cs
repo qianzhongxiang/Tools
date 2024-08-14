@@ -43,8 +43,6 @@ namespace ProjectRedmine
             this.Application.ProjectBeforeResourceChange += Application_ProjectBeforeResourceChange;
             this.Application.ProjectBeforeTaskNew += Application_ProjectBeforeTaskNew;
             this.Application.NewProject += Application_NewProject;
-
-
             Task.Run(delegate
             {
                 while (true)
@@ -67,7 +65,9 @@ namespace ProjectRedmine
             });
         }
 
-
+        private void Application_ProjectBeforeResourceChange1(MSProject.Resource res, MSProject.PjField Field, object NewVal, ref bool Cancel)
+        {
+        }
 
         private void ActiveProject_Open(MSProject.Project pj)
         {

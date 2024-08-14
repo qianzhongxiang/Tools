@@ -65,6 +65,7 @@ namespace ProjectRedmine
 
         public void Update()
         {
+            //TODO 每个已有未完成任务 获取，判断是否一至，不一至更新
             ThisAddIn.Fresh = true;
             try
             {
