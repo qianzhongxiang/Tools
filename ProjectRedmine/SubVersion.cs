@@ -178,33 +178,41 @@ namespace ProjectRedmine
 
             MSProject.Task newTask = Pj.Tasks.Add
             ($"[{issue.Tracker.Name}] {issue.Subject}", parentTask?.ID + 1 ?? System.Type.Missing);
-            newTask.Manual = false;
-            newTask.Start = issue.StartDate;
+            ThisAddIn.redmineProvider.Update(issue,newTask);
+            //newTask.Manual = false;
+            //newTask.Start = issue.StartDate;
+            //if (issue.DueDate != null)
+            //{
+            //    newTask.Finish = issue.DueDate;
+            //}
+            //else
+            //{
+            //    newTask.Finish = issue.StartDate.Value.AddDays(3);
+            //}
+            ////if (issue.EstimatedHours == null || issue.EstimatedHours < 8)
+            ////{
+            ////    newTask.Duration = 8 * 60;
+            ////}
+            ////else
+            ////{
+            ////    newTask.Duration = issue.EstimatedHours * 60;
+            ////}
+            //newTask.ResourceNames = issue.AssignedTo?.Name ?? "";
+            //newTask.OutlineLevel = 3;
+            //if (issue.Status.Id == 5 || issue.Status.Id == 6)
+            //{
+            //    newTask.PercentComplete = 100;
+            //}
+            //else
+            //{
+            //    var precent = issue.DoneRatio ?? 0;
 
-            if (issue.EstimatedHours == null || issue.EstimatedHours < 8)
-            {
-                newTask.Duration = 8 * 60;
-            }
-            else
-            {
-                newTask.Duration = issue.EstimatedHours * 60;
-            }
-            newTask.ResourceNames = issue.AssignedTo?.Name ?? "";
-            newTask.OutlineLevel = 3;
-            if (issue.Status.Id == 5 || issue.Status.Id == 6)
-            {
-                newTask.PercentComplete = 100;
-            }
-            else
-            {
-                var precent = issue.DoneRatio ?? 0;
-
-                newTask.PercentComplete = precent == 100 ? 99 : precent;
-            }
-            newTask.Text1 = issue.Status.Name;
-            newTask.Text2 = issue.Author.Name;
-            //newTask.OutlineLevel = (short)(parentTask.OutlineLevel + 1);
-            newTask.Number1 = issue.Id;
+            //    newTask.PercentComplete = precent == 100 ? 99 : precent;
+            //}
+            //newTask.Text1 = issue.Status.Name;
+            //newTask.Text2 = issue.Author.Name;
+            ////newTask.OutlineLevel = (short)(parentTask.OutlineLevel + 1);
+            //newTask.Number1 = issue.Id;
             return newTask.ID;
             //if (issue.Children == null)
             //{

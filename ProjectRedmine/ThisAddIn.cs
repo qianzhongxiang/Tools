@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.ServiceModel.Dispatcher;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using MSProject = Microsoft.Office.Interop.MSProject;
@@ -40,34 +42,91 @@ namespace ProjectRedmine
             //btnSet.Style = Office.MsoButtonStyle.msoButtonCaption;
             //btnSet.Click += BtnSet_Click; 
             this.Application.ProjectBeforeTaskChange += Application_ProjectBeforeTaskChange;
-            this.Application.ProjectBeforeResourceChange += Application_ProjectBeforeResourceChange;
-            this.Application.ProjectBeforeTaskNew += Application_ProjectBeforeTaskNew;
+            //this.Application.ProjectBeforeResourceChange += Application_ProjectBeforeResourceChange;
+            //this.Application.ProjectBeforeTaskNew += Application_ProjectBeforeTaskNew;
             this.Application.NewProject += Application_NewProject;
-            Task.Run(delegate
-            {
-                while (true)
-                {
-                    try
-                    {
-                        if (this.Application.ActiveProject != null)
-                        {
-                            var wrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
-                            wrapper.Update();
-                        }
-                    }
-                    catch (Exception)
-                    {
+            //this.Application.ProjectBeforeTaskChange2 += Application_ProjectBeforeTaskChange2;
+            //this.Application.ProjectBeforeTaskDelete += Application_ProjectBeforeTaskDelete;
+            //this.Application.ProjectBeforeTaskDelete2 += Application_ProjectBeforeTaskDelete2;
+            //this.Application.ProjectBeforeTaskNew2 += Application_ProjectBeforeTaskNew2;
+            //this.Application.ProjectResourceNew += Application_ProjectResourceNew;
+            //this.Application.SecondaryViewChange += Application_SecondaryViewChange;
+            //this.Application.WindowSelectionChange += Application_WindowSelectionChange;
+            //this.Application.WindowViewChange += Application_WindowViewChange;
+            //this.Application.ProjectBeforeAssignmentChange += Application_ProjectBeforeAssignmentChange;
+            //this.Application.ProjectAssignmentNew += Application_ProjectAssignmentNew;
+            //this.Application.ProjectBeforeAssignmentNew += Application_ProjectBeforeAssignmentNew;
+            //          Task.Run(delegate
+            //{
+            //    while (true)
+            //    {
+            //        try
+            //        {
+            //            if (this.Application.ActiveProject != null)
+            //            {
+            //                var wrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
+            //                wrapper.Update();
+            //            }
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            System.Diagnostics.Debug.WriteLine($"err {ex.Message}");
+            //        }
 
-                    }
-
-                    System.Threading.Thread.Sleep(60000);
-                }
-            });
+            //        System.Threading.Thread.Sleep(60000);
+            //    }
+            //});
         }
 
-        private void Application_ProjectBeforeResourceChange1(MSProject.Resource res, MSProject.PjField Field, object NewVal, ref bool Cancel)
-        {
-        }
+        //private void Application_ProjectBeforeAssignmentNew(MSProject.Project pj, ref bool Cancel)
+        //{
+        //}
+
+        //private void Application_ProjectAssignmentNew(MSProject.Project pj, int ID)
+        //{
+        //}
+
+        //private void Application_ProjectBeforeAssignmentChange(MSProject.Assignment asg, MSProject.PjAssignmentField Field, object NewVal, ref bool Cancel)
+        //{
+
+        //}
+
+        //private void Application_WindowViewChange(MSProject.Window Window, MSProject.View prevView, MSProject.View newView, bool success)
+        //{
+        //}
+
+        //private void Application_WindowSelectionChange(MSProject.Window Window, MSProject.Selection sel, object selType)
+        //{
+
+        //}
+
+        //private void Application_SecondaryViewChange(MSProject.Window Window, MSProject.View prevView, MSProject.View newView, bool success)
+        //{
+        //}
+
+        //private void Application_ProjectResourceNew(MSProject.Project pj, int ID)
+        //{
+        //}
+
+        //private void Application_ProjectBeforeTaskNew2(MSProject.Project pj, MSProject.EventInfo Info)
+        //{
+        //}
+
+        //private void Application_ProjectBeforeTaskDelete2(MSProject.Task tsk, MSProject.EventInfo Info)
+        //{
+        //}
+
+        //private void Application_ProjectBeforeTaskDelete(MSProject.Task tsk, ref bool Cancel)
+        //{
+        //}
+
+        //private void Application_ProjectBeforeTaskChange2(MSProject.Task tsk, MSProject.PjField Field, object NewVal, MSProject.EventInfo Info)
+        //{
+        //}
+
+        //private void Application_ProjectBeforeResourceChange1(MSProject.Resource res, MSProject.PjField Field, object NewVal, ref bool Cancel)
+        //{
+        //}
 
         private void ActiveProject_Open(MSProject.Project pj)
         {
@@ -75,26 +134,52 @@ namespace ProjectRedmine
 
         private void ActiveProject_Change(MSProject.Project pj)
         {
+            //try
+            //{
+            //    var cell = this.Application.ActiveCell;
+            //    if (cell != null & cell.Assignment != null)
+            //    {
+            //        mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
+            //        redmineProvider = mSProjectWrapper.RedmineProvider;
+            //        var tsk = cell.Assignment.Task;
+            //        redmineProvider.ChangeTask((int)tsk.Number1, tsk.Start, tsk.Duration, tsk);
+            //    }
+            //}
+            //catch (Exception)
+            //{
+
+            //}
+
+            if (tasks.Count > 0)
+            {
+                var t = tasks.Dequeue();
+                redmineProvider.ChangeTask(t);
+            }
         }
 
         private void Application_NewProject(MSProject.Project pj)
         {
-
-            if (MSProjectWrapper.CreateOrNewWrapper(pj) != null)
+            mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(pj);
+            redmineProvider = mSProjectWrapper.RedmineProvider;
+            if (mSProjectWrapper != null)
             {
                 pj.Change += ActiveProject_Change;
                 pj.Open += ActiveProject_Open;
             }
         }
 
-        private void Application_ProjectBeforeTaskNew(MSProject.Project pj, ref bool Cancel)
-        {
-        }
+        //private void Application_ProjectBeforeTaskNew(MSProject.Project pj, ref bool Cancel)
+        //{
+        //}
 
-        private void Application_ProjectBeforeResourceChange(MSProject.Resource res, MSProject.PjField Field, object NewVal, ref bool Cancel)
-        {
-        }
+        //private void Application_ProjectBeforeResourceChange(MSProject.Resource res, MSProject.PjField Field, object NewVal, ref bool Cancel)
+        //{
+        //}
 
+
+        MSProject.Task changedT;
+        Task changeTask;
+        Queue<MSProject.Task> tasks=new Queue<MSProject.Task>();
         private void Application_ProjectBeforeTaskChange(MSProject.Task tsk, MSProject.PjField Field, object NewVal, ref bool Cancel)
         {
             if (Fresh)
@@ -105,60 +190,81 @@ namespace ProjectRedmine
             {
                 return;
             }
-            if (tsk.Name.StartsWith("[需求]"))
+            //if (tsk.Name.StartsWith("[需求]"))
+            //{
+            //    Cancel = true;
+            //    var res = System.Windows.Forms.MessageBox.Show($"the demand task cannot be changed {tsk.ID}:{tsk.Name}, {Field} {NewVal}", "Info", System.Windows.Forms.MessageBoxButtons.OK);
+            //}
+            if (tasks.Count==0||tasks.LastOrDefault().ID != tsk.ID)
             {
-                Cancel = true;
-                var res = System.Windows.Forms.MessageBox.Show($"the demand task cannot be changed {tsk.ID}:{tsk.Name}, {Field} {NewVal}", "Info", System.Windows.Forms.MessageBoxButtons.OK);
+                tasks.Enqueue(tsk);
             }
-            switch (Field)
-            {
-                case MSProject.PjField.pjTaskConstraintType:
-                    return;
-                case MSProject.PjField.pjTaskStartText:
-                case MSProject.PjField.pjTaskActualStart:
-                    mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
-                    redmineProvider = mSProjectWrapper.RedmineProvider;
-                    switch (NewVal)
-                    {
-                        case DateTime dt:
-                            redmineProvider.ChangeTask((int)tsk.Number1, dt, tsk.Duration, tsk);
-                            break;
-                        case string sd:
-                            redmineProvider.ChangeTask((int)tsk.Number1, DateTime.Parse(sd), tsk.Duration, tsk);
-                            break;
-                        default:
-                            break;
-                    }
+            //if (changedT != null && changedT.ID == tsk.ID)
+            //{
+            //    return;
+            //}
+            //if (changeTask != null)
+            //{
+            //    changeTask.Wait();
+            //}
+            //changeTask = Task.Run(() =>
+            // {
+            //     changedT = tsk;
+            //     System.Threading.Thread.Sleep(200);
+            //     changedT = null;
+            //     redmineProvider.ChangeTask(tsk);
 
-                    break;
-                case MSProject.PjField.pjTaskFixedDuration:
-                case MSProject.PjField.pjTaskActualDuration:
-                case MSProject.PjField.pjTaskDuration:
-                case MSProject.PjField.pjTaskDurationText:
-                    mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
-                    redmineProvider = mSProjectWrapper.RedmineProvider;
-                    switch (NewVal)
-                    {
-                        case string strVal:
-                            var d = double.Parse(strVal.Split('d')[0]);
-                            redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)d * 8 * 60, tsk);
-                            //else if (strVal.Contains('h'))
-                            //{
-                            //    var h = double.Parse(strVal.Split('h')[0]);
-                            //    redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)h * 60, tsk);
-                            //}
-                            break;
-                        case decimal mins:
-                            redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)mins, tsk);
-                            break;
-                        default:
-                            break;
-                    }
+            // });
+            //changeTask.Wait();
+            //switch (Field)
+            //{
+            //    case MSProject.PjField.pjTaskConstraintType:
+            //        return;
+            //    case MSProject.PjField.pjTaskStartText:
+            //    case MSProject.PjField.pjTaskActualStart:
+            //        mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
+            //        redmineProvider = mSProjectWrapper.RedmineProvider;
+            //        switch (NewVal)
+            //        {
+            //            case DateTime dt:
+            //                redmineProvider.ChangeTask((int)tsk.Number1, dt, tsk.Duration, tsk);
+            //                break;
+            //            case string sd:
+            //                redmineProvider.ChangeTask((int)tsk.Number1, DateTime.Parse(sd), tsk.Duration, tsk);
+            //                break;
+            //            default:
+            //                break;
+            //        }
 
-                    break;
-                default:
-                    return;
-            }
+            //        break;
+            //    case MSProject.PjField.pjTaskFixedDuration:
+            //    case MSProject.PjField.pjTaskActualDuration:
+            //    case MSProject.PjField.pjTaskDuration:
+            //    case MSProject.PjField.pjTaskDurationText:
+            //        mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
+            //        redmineProvider = mSProjectWrapper.RedmineProvider;
+            //        switch (NewVal)
+            //        {
+            //            case string strVal:
+            //                var d = double.Parse(strVal.Split('d')[0]);
+            //                redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)d * 8 * 60, tsk);
+            //                //else if (strVal.Contains('h'))
+            //                //{
+            //                //    var h = double.Parse(strVal.Split('h')[0]);
+            //                //    redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)h * 60, tsk);
+            //                //}
+            //                break;
+            //            case decimal mins:
+            //                redmineProvider.ChangeTask((int)tsk.Number1, (DateTime)tsk.Start, (int)mins, tsk);
+            //                break;
+            //            default:
+            //                break;
+            //        }
+
+            //        break;
+            //    default:
+            //        return;
+            //}
 
             //var res = System.Windows.Forms.MessageBox.Show($"change {tsk.ID}:{tsk.Name}, {Field}", "Info", System.Windows.Forms.MessageBoxButtons.OKCancel);
             //if (res == System.Windows.Forms.DialogResult.OK)
@@ -185,8 +291,8 @@ namespace ProjectRedmine
 
         }
 
-        RedmineProvider redmineProvider;
-        MSProjectWrapper mSProjectWrapper;
+        public static RedmineProvider redmineProvider;
+        static MSProjectWrapper mSProjectWrapper;
         private void Button_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
         {
 

@@ -41,8 +41,8 @@ namespace ProjectRedmine
             this.btnConfig = this.Factory.CreateRibbonButton();
             this.btnRefresh = this.Factory.CreateRibbonButton();
             this.btnUpdate = this.Factory.CreateRibbonButton();
-            this.btnJournal = this.Factory.CreateRibbonButton();
             this.btnURL = this.Factory.CreateRibbonButton();
+            this.btnJournal = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.SuspendLayout();
@@ -97,14 +97,6 @@ namespace ProjectRedmine
             this.btnUpdate.ShowImage = true;
             this.btnUpdate.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnUpdate_Click);
             // 
-            // btnJournal
-            // 
-            this.btnJournal.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.btnJournal.Label = "GenerateJournal";
-            this.btnJournal.Name = "btnJournal";
-            this.btnJournal.ShowImage = true;
-            this.btnJournal.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnJournal_Click);
-            // 
             // btnURL
             // 
             this.btnURL.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
@@ -112,6 +104,14 @@ namespace ProjectRedmine
             this.btnURL.Name = "btnURL";
             this.btnURL.ShowImage = true;
             this.btnURL.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnURL_Click);
+            // 
+            // btnJournal
+            // 
+            this.btnJournal.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnJournal.Label = "GenerateJournal";
+            this.btnJournal.Name = "btnJournal";
+            this.btnJournal.ShowImage = true;
+            this.btnJournal.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnJournal_Click);
             // 
             // Ribbon
             // 

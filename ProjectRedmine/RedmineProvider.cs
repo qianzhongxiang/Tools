@@ -137,18 +137,93 @@ namespace ProjectRedmine
                 }
             }
         }
-        public static void Update(int issueId)
+        public void Update(int issueId, MSProject.Task tsk)
+        {
+            var parameters = new NameValueCollection { };
+            var issue = Manager.GetObject<Issue>(issueId.ToString(), parameters);
+            Update(issue, tsk);
+        }
+
+        public void Update(Issue issue, MSProject.Task task)
         {
 
+
+            task.Manual = false;
+            task.Start = issue.StartDate;
+            if (issue.DueDate != null)
+            {
+                var a = issue.DueDate.Value.AddHours(18);
+                task.Finish = a;
+            }
+            else
+            {
+                task.Finish = issue.StartDate.Value.AddDays(3);
+            }
+            //if (issue.EstimatedHours == null || issue.EstimatedHours < 8)
+            //{
+            //    newTask.Duration = 8 * 60;
+            //}
+            //else
+            //{
+            //    newTask.Duration = issue.EstimatedHours * 60;
+            //}
+            task.ResourceNames = issue.AssignedTo?.Name ?? "";
+            task.OutlineLevel = 3;
+            if (issue.Status.Id == 5 || issue.Status.Id == 6)
+            {
+                task.PercentComplete = 100;
+            }
+            else
+            {
+                var precent = issue.DoneRatio ?? 0;
+
+                task.PercentComplete = precent == 100 ? 99 : precent;
+            }
+            task.Text1 = issue.Status.Name;
+            task.Text2 = issue.Author.Name;
+            //newTask.OutlineLevel = (short)(parentTask.OutlineLevel + 1);
+            task.Number1 = issue.Id;
+
+
         }
-        public void ChangeTask(int id, DateTime startTime, int spentHours, MSProject.Task tsk)
+        public void ChangeTask(MSProject.Task tsk)
         {
-            System.Diagnostics.Debug.WriteLine($"{id},{startTime},{spentHours / 60}");
-            var parameters = new NameValueCollection { };
-            var issue = Manager.GetObject<Issue>(id.ToString(), parameters);
-            issue.StartDate = startTime;
-            issue.EstimatedHours = spentHours / 60;
-            Manager.UpdateObject<Issue>(id.ToString(), issue);
+            int id = -1;
+            try
+            {
+                
+                id = (int)tsk.Number1;
+                System.Diagnostics.Debug.WriteLine($"{id},{tsk.Start},{tsk.Finish}");
+                var parameters = new NameValueCollection { };
+                var issue = Manager.GetObject<Issue>(id.ToString(), parameters);
+                issue.StartDate = tsk.Start;
+                issue.DueDate = tsk.Finish;
+                Manager.UpdateObject<Issue>(id.ToString(), issue);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                if (id != -1)
+                {
+                    ThisAddIn.Fresh = true;
+                    try
+                    {
+                        Update(id, tsk);
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        ThisAddIn.Fresh = false;
+                    }
+                }
+            }
         }
     }
 }

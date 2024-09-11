@@ -42,7 +42,7 @@ namespace ProjectRedmine
                 var now = DateTime.UtcNow;
                 foreach (var item in redmineProvider.Versions)
                 {
-                    if (item.Status== Redmine.Net.Api.Types.VersionStatus.Open)
+                    if (item.Status == Redmine.Net.Api.Types.VersionStatus.Open)
                     {
                         var subv = new SubVersion(mSProjectWrapper, item, redmineProvider);
                         subv.Create();
@@ -69,7 +69,7 @@ namespace ProjectRedmine
 
             foreach (MSProject.Task item in tasks)
             {
-                if (item.Number1!=0)
+                if (item.Number1 != 0)
                 {
 
                 }
@@ -104,23 +104,50 @@ namespace ProjectRedmine
             {
                 mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
                 redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
-                redmineProvider.ChangeTask((int)t.Number1, (DateTime)t.Start, t.Duration, t);
+                redmineProvider.ChangeTask(t);
             }
         }
 
         private void btnURL_Click(object sender, RibbonControlEventArgs e)
         {
             var tasks = this.Application.ActiveSelection.Tasks;
-            if (tasks.Count != 1)
+            var resources = this.Application.ActiveSelection.Resources;
+            var fieldIds = this.Application.ActiveSelection.FieldIDList;
+            var parent = this.Application.ActiveSelection.Parent;
+            var c = this.Application.ActiveCell;
+            if (tasks != null)
             {
-                System.Windows.Forms.MessageBox.Show("Please only one task");
-                return;
+                foreach (MSProject.Task item in tasks)
+                {
+                    string target = $"{RedmineProvider.Host}/issues/{item.Number1}";
+                    System.Diagnostics.Process.Start(target);
+                }
             }
-            foreach (MSProject.Task item in tasks)
+
+            if (c != null && c.Assignment != null)
             {
+                var item = c.Assignment.Task;
                 string target = $"{RedmineProvider.Host}/issues/{item.Number1}";
                 System.Diagnostics.Process.Start(target);
             }
+
+            //if (resources != null)
+            //{
+            //    foreach (MSProject.Resource item in resources)
+            //    {
+            //        var id = item.ID;
+            //        var name = item.Name;
+            //        var code = item.Code;
+            //        var assigns = item.Assignments;
+            //        foreach (MSProject.Assignment assignment in assigns)
+            //        {
+            //            var p = assignment.TeamStatusPending;
+            //            System.Diagnostics.Debug.WriteLine($"{assignment.Task.Name} {p} {assignment.UniqueID}");
+            //        }
+            //        string target = $"{RedmineProvider.Host}/issues/{item.Number1}";
+            //        System.Diagnostics.Process.Start(target);
+            //    }
+            //}
 
         }
     }
