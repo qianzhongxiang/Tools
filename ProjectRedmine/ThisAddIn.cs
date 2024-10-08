@@ -160,11 +160,11 @@ namespace ProjectRedmine
         private void Application_NewProject(MSProject.Project pj)
         {
             mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(pj);
-            redmineProvider = mSProjectWrapper.RedmineProvider;
             if (mSProjectWrapper != null)
             {
                 pj.Change += ActiveProject_Change;
                 pj.Open += ActiveProject_Open;
+                redmineProvider = mSProjectWrapper.RedmineProvider;
             }
         }
 
@@ -179,7 +179,7 @@ namespace ProjectRedmine
 
         MSProject.Task changedT;
         Task changeTask;
-        Queue<MSProject.Task> tasks=new Queue<MSProject.Task>();
+        Queue<MSProject.Task> tasks = new Queue<MSProject.Task>();
         private void Application_ProjectBeforeTaskChange(MSProject.Task tsk, MSProject.PjField Field, object NewVal, ref bool Cancel)
         {
             if (Fresh)
@@ -195,7 +195,7 @@ namespace ProjectRedmine
             //    Cancel = true;
             //    var res = System.Windows.Forms.MessageBox.Show($"the demand task cannot be changed {tsk.ID}:{tsk.Name}, {Field} {NewVal}", "Info", System.Windows.Forms.MessageBoxButtons.OK);
             //}
-            if (tasks.Count==0||tasks.LastOrDefault().ID != tsk.ID)
+            if (tasks.Count == 0 || tasks.LastOrDefault().ID != tsk.ID)
             {
                 tasks.Enqueue(tsk);
             }

@@ -46,12 +46,11 @@ namespace ProjectRedmine
 
             return paragraph.CreateHyperlinkRun(rId);
         }
-        public void GenerateJournal(IEnumerable<Project> projects)
+        public void GenerateJournal(IEnumerable<Project> projects, DateTime start)
         {
             var parameters = new NameValueCollection { };
             var pjs = string.Join("|", projects.Select(p => p.Id));
             parameters.Add(RedmineKeys.PROJECTS, pjs);
-            var start = DateTime.Now.Subtract(TimeSpan.FromDays(7));
             var startTime = start.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
             parameters.Add(RedmineKeys.SPENT_ON, $">={startTime}");
             parameters.Add("issue.tracker_id", $"{FunctionId}|{DesignId}");
@@ -191,7 +190,7 @@ namespace ProjectRedmine
             int id = -1;
             try
             {
-                
+
                 id = (int)tsk.Number1;
                 System.Diagnostics.Debug.WriteLine($"{id},{tsk.Start},{tsk.Finish}");
                 var parameters = new NameValueCollection { };

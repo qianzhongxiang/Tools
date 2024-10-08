@@ -91,7 +91,7 @@ namespace ProjectRedmine
         {
             mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
             redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
-            redmineProvider.GenerateJournal(redmineProvider.Projects.Where(p => p.Name.Contains("VIS 4") || p.Name.Contains("EFEM")));
+            new Report(redmineProvider).ShowDialog();
         }
 
         private void btnTest_Click(object sender, RibbonControlEventArgs e)
