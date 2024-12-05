@@ -85,7 +85,6 @@ namespace NugetPackageUploader
                     {
                         if (DateTime.Now.Subtract(svcLastHandleDate).Days < 1)
                         {
-                            Thread.Sleep(10000);
                             continue;
                         }
                         var assembly = System.Reflection.Assembly.GetAssembly(typeof(Setting));
@@ -100,8 +99,8 @@ namespace NugetPackageUploader
                         Vinci.Logging.LoggerFactory.Logger.LogInformation("FTP connect ok");
                         var localFile = System.IO.Path.Combine(dir, ProfileName);
                         var remoteFile = System.IO.Path.Combine(Setting.Instance.RemoteDir, ProfileName);
-                        client.DownloadFile(localFile, remoteFile);
-                        Vinci.Logging.LoggerFactory.Logger.LogInformation("Profile download ok");
+                        //client.DownloadFile(localFile, remoteFile);
+                        //Vinci.Logging.LoggerFactory.Logger.LogInformation("Profile download ok");
 
                         var profile = Newtonsoft.Json.JsonConvert.DeserializeObject<Profile>(System.IO.File.ReadAllText(localFile));
                         var lastDate = profile.Updated;
@@ -125,13 +124,16 @@ namespace NugetPackageUploader
 
                         System.IO.File.WriteAllText(localFile, Newtonsoft.Json.JsonConvert.SerializeObject(profile));
 
-                        client.UploadFile(localFile, remoteFile);
-                        Vinci.Logging.LoggerFactory.Logger.LogInformation($"Profile upload ok:{svcLastHandleDate = DateTime.Now}");
+                        //client.UploadFile(localFile, remoteFile);
+                        //Vinci.Logging.LoggerFactory.Logger.LogInformation($"Profile upload ok:{svcLastHandleDate = DateTime.Now}");
 
                     }
                     catch (Exception ex)
                     {
                         Vinci.Logging.LoggerFactory.Logger.LogError(ex, "NugetPackageUploader");
+                    }
+                    finally { 
+                        System.Threading.Thread.Sleep(TimeSpan.FromHours(1));
                     }
                 }
                 Vinci.Logging.LoggerFactory.Logger.LogInformation("Task stopped");

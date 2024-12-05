@@ -4,6 +4,20 @@
     "/DBBackup/202.Backup/bts",
     "/DBBackup/202.Backup/system_wafer",
     "/DBBackup/202.Backup/tornado_db",
-    "/DBBackup/Wiki"
+    "/DBBackup/Wiki",
+  ],
+  "DirsForOnlyFiles": [
+    "/DBBackup/202.Backup/bitnami_testlink",
+    "/InstallPackages/VIS",
+    "/InstallPackages/CalcAgent",
+    "/InstallPackages/CalcUnit",
+    "/InstallPackages/EFEM/Component",
+    "/InstallPackages/EFEM/EFEM_Service",
+    "/InstallPackages/EFEM/EFEM_UI",
+    "/InstallPackages/EFEM",
+    "/InstallPackages/Storm",
+    "/InstallPackages/Storm/DBService",
+    "/InstallPackages/Storm/Storm_Report",
+    "/InstallPackages/VPATF"
   ]
 }

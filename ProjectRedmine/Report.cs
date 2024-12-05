@@ -23,7 +23,7 @@ namespace ProjectRedmine
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            RedmineProvider.GenerateJournal(RedmineProvider.Projects.Where(p => p.Name.Contains("VIS 4") || p.Name.Contains("EFEM")), dateStart.Value);
+            RedmineProvider.GenerateJournal(RedmineProvider.Projects.Where(p => p.Name.Contains("VIS") || p.Name.Contains("EFEM")||p.Name.Contains("SPC")||p.Name.Contains("ROI")), dateStart.Value);
             this.Close();
         }
 
