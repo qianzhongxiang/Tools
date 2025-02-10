@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecureSimulator", "SecureSi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NugetPackageUploader", "NugetPackageUploader\NugetPackageUploader.csproj", "{12AA91CB-266D-4728-B9B5-9DA9AA2E1140}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeeklyReport", "WeeklyReport\WeeklyReport.csproj", "{FAE112CA-48CC-4DC8-9DD4-961A1F89F56E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{12AA91CB-266D-4728-B9B5-9DA9AA2E1140}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12AA91CB-266D-4728-B9B5-9DA9AA2E1140}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12AA91CB-266D-4728-B9B5-9DA9AA2E1140}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAE112CA-48CC-4DC8-9DD4-961A1F89F56E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAE112CA-48CC-4DC8-9DD4-961A1F89F56E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAE112CA-48CC-4DC8-9DD4-961A1F89F56E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAE112CA-48CC-4DC8-9DD4-961A1F89F56E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
