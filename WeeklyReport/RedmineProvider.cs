@@ -24,9 +24,9 @@ namespace ProjectRedmine
         public RedmineProvider()
         {
             var apiKey = "4110d8c8eb1729ad3a9ec13b6f505155c242efa2";
-            var builder = new RedmineManagerOptionsBuilder().WithHost(Host).WithApiKeyAuthentication(apiKey);
-            Manager = new RedmineManager(builder);
-            //Manager = new RedmineManager(Host, apiKey);
+            //var builder = new RedmineManagerOptionsBuilder().WithHost(Host).WithApiKeyAuthentication(apiKey);
+            //Manager = new RedmineManager(builder);
+            Manager = new RedmineManager(Host, apiKey);
             Projects = Manager.GetObjects<Project>();
             //Projects = Manager.GetObjects<Project>();
         }
@@ -49,14 +49,18 @@ namespace ProjectRedmine
             parameters.Add("issue.tracker_id", $"{FunctionId}|{DesignId}");
 
             var times = Manager.GetObjects<TimeEntry>(parameters);
-            var issues = times.Select(t => t.Issue).GroupBy(t => t.Id);
             List<Issue> functions = new List<Issue>();
-            var issueArg = new NameValueCollection { };
-            foreach (var item in issues)
+            if (times != null)
             {
-                var issue = Manager.GetObject<Issue>(item.Key.ToString(), issueArg);
-                functions.Add(issue);
+                var issues = times.Select(t => t.Issue).GroupBy(t => t.Id);
+                var issueArg = new NameValueCollection { };
+                foreach (var item in issues)
+                {
+                    var issue = Manager.GetObject<Issue>(item.Key.ToString(), issueArg);
+                    functions.Add(issue);
+                }
             }
+
 
             parameters = new NameValueCollection { };
             parameters.Add(RedmineKeys.PROJECTS, pjs);
