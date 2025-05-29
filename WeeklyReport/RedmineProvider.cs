@@ -39,17 +39,22 @@ namespace ProjectRedmine
 
             return paragraph.CreateHyperlinkRun(rId);
         }
-        public void GenerateJournal(IEnumerable<Project> projects, DateTime start)
+        public void GenerateJournal(IEnumerable<Project> projects,Project lpP, DateTime start)
         {
             var parameters = new NameValueCollection { };
-            var pjs = string.Join("|", projects.Select(p => p.Id));
-            parameters.Add(RedmineKeys.PROJECTS, pjs);
             var startTime = start.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
+            var projectIds = projects.Select(p => p.Id);
             parameters.Add(RedmineKeys.SPENT_ON, $">={startTime}");
-            parameters.Add("issue.tracker_id", $"{FunctionId}|{DesignId}");
+            //parameters.Add("issue.tracker_id", $"{FunctionId}|{DesignId}");
+            var tlist = Manager.GetObjects<TimeEntry>(parameters);
+            var times = new List<TimeEntry>();
+            if (tlist != null)
+            {
+                times = tlist.Where(t => projectIds.Contains(t.Project.Id)).ToList();
+            }
 
-            var times = Manager.GetObjects<TimeEntry>(parameters);
             List<Issue> functions = new List<Issue>();
+            var issuesList = new List<Issue>();
             if (times != null)
             {
                 var issues = times.Select(t => t.Issue).GroupBy(t => t.Id);
@@ -57,17 +62,29 @@ namespace ProjectRedmine
                 foreach (var item in issues)
                 {
                     var issue = Manager.GetObject<Issue>(item.Key.ToString(), issueArg);
-                    functions.Add(issue);
+                    if (issue.Tracker.Id == FunctionId || issue.Tracker.Id == DesignId)
+                    {
+                        functions.Add(issue);
+                    }else if (issue.Tracker.Id == IssueId)
+                    {
+                        issuesList.Add(issue);
+                    }
                 }
             }
 
-
-            parameters = new NameValueCollection { };
-            parameters.Add(RedmineKeys.PROJECTS, pjs);
-            parameters.Add(RedmineKeys.CREATED_ON, $">={startTime}");
-            parameters.Add(RedmineKeys.TRACKER_ID, $"{IssueId}");
-            parameters.Add(RedmineKeys.STATUS_ID, RedmineKeys.ALL);
-            var issuesList = Manager.GetObjects<Issue>(parameters);
+            foreach (var proj in projects)
+            {
+                parameters = new NameValueCollection { { RedmineKeys.PROJECT_ID, proj.Id.ToString() } };
+                parameters.Add(RedmineKeys.CREATED_ON, $">={startTime}");
+                parameters.Add(RedmineKeys.TRACKER_ID, $"{IssueId}");
+                parameters.Add(RedmineKeys.STATUS_ID, RedmineKeys.ALL);
+                var list = Manager.GetObjects<Issue>(parameters);
+                if (list != null)
+                {
+                    issuesList.AddRange(list);
+                }
+            }
+            issuesList= issuesList.DistinctBy(i => i.Id).ToList();
 
             using (XWPFDocument doc = new XWPFDocument())
             {
@@ -121,6 +138,23 @@ namespace ProjectRedmine
                 r1 = p1.CreateRun();
                 r1.SetText("流片");
                 r1.FontSize = 20;
+                parameters = new NameValueCollection { { RedmineKeys.PROJECT_ID, lpP.Id.ToString() } };
+                parameters.Add(RedmineKeys.CREATED_ON, $">={startTime}");
+                //parameters.Add(RedmineKeys.TRACKER_ID, $"{IssueId}");
+                parameters.Add(RedmineKeys.STATUS_ID, RedmineKeys.ALL);
+                var list = Manager.GetObjects<Issue>(parameters);
+                foreach (var item in list)
+                {
+                    p1 = doc.CreateParagraph();
+                    p1.Alignment = ParagraphAlignment.LEFT;
+                    XWPFHyperlinkRun hyperlinkrun = CreateHyperlinkRun(p1, $"{Host}/issues/{item.Id}");
+                    hyperlinkrun.SetText($"{item.Tracker.Name} #{item.Id}");
+                    hyperlinkrun.SetColor("0000FF");
+                    hyperlinkrun.Underline = UnderlinePatterns.Single;
+                    r1 = p1.CreateRun();
+                    r1.SetText($" {item.Subject}");
+                    r1.FontSize = 11;
+                }
 
                 p1 = doc.CreateParagraph();
                 p1.Alignment = ParagraphAlignment.LEFT;

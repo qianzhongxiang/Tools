@@ -133,8 +133,8 @@
     <Reference Include="NPOI.OpenXmlFormats, Version=2.7.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.7.0\lib\net472\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
-    <Reference Include="redmine-net-api, Version=4.7.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\redmine-api.4.7.1\lib\net472\redmine-net-api.dll</HintPath>
+    <Reference Include="redmine-net-api, Version=4.6.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\redmine-api.4.6.5\lib\net472\redmine-net-api.dll</HintPath>
     </Reference>
     <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
       <HintPath>..\packages\SixLabors.Fonts.1.0.1\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
@@ -234,12 +234,6 @@
   <ItemGroup>
     <Compile Include="MSProjectWrapper.cs" />
     <Compile Include="RedmineProvider.cs" />
-    <Compile Include="Report.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Report.Designer.cs">
-      <DependentUpon>Report.cs</DependentUpon>
-    </Compile>
     <Compile Include="Ribbon.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -255,9 +249,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="Report.resx">
-      <DependentUpon>Report.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Ribbon.resx">
       <DependentUpon>Ribbon.cs</DependentUpon>
     </EmbeddedResource>
