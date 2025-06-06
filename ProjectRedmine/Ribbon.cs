@@ -19,7 +19,7 @@ namespace ProjectRedmine
         }
         RedmineProvider redmineProvider;
         MSProjectWrapper mSProjectWrapper;
-        private void btnRefresh_Click(object sender, RibbonControlEventArgs e)
+        private async void btnRefresh_Click(object sender, RibbonControlEventArgs e)
         {
             ThisAddIn.Fresh = true;
             try
@@ -46,7 +46,7 @@ namespace ProjectRedmine
                     {
                         var subv = new SubVersion(mSProjectWrapper, item, redmineProvider);
                         subv.Create();
-                        subv.AddSubTasks();
+                        await subv.AddSubTasks();
                     }
                 }
                 mSProjectWrapper.UpdateTime = now;
@@ -89,9 +89,9 @@ namespace ProjectRedmine
 
         private void btnJournal_Click(object sender, RibbonControlEventArgs e)
         {
-            mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
-            redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
-            new Report(redmineProvider).ShowDialog();
+            //mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
+            //redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
+            //new Report(redmineProvider).ShowDialog();
         }
 
         private void btnTest_Click(object sender, RibbonControlEventArgs e)

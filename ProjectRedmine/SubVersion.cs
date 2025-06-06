@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using MSProject = Microsoft.Office.Interop.MSProject;
 using Office = Microsoft.Office.Core;
@@ -14,7 +15,7 @@ namespace ProjectRedmine
     public class SubVersion
     {
         public MSProject.Task MainTask { get; set; }
-        public MSProject.Task DemandTask { get; set; }
+        //public MSProject.Task DemandTask { get; set; }
         public MSProject.Task DesignTask { get; set; }
         public MSProject.Task DevelopTask { get; set; }
         public MSProject.Task TestTask { get; set; }
@@ -43,9 +44,9 @@ namespace ProjectRedmine
                        (Version.Name, System.Type.Missing);
             MainTask.OutlineLevel = 1;
 
-            DemandTask = Pj.Tasks.Add
-         ("demand", System.Type.Missing);
-            DemandTask.OutlineLevel = 2;
+         //   DemandTask = Pj.Tasks.Add
+         //("demand", System.Type.Missing);
+         //   DemandTask.OutlineLevel = 2;
 
             DesignTask = Pj.Tasks.Add
            ("design", System.Type.Missing);
@@ -61,7 +62,7 @@ namespace ProjectRedmine
         }
         public RedmineManager Manager { get; set; }
 
-        public void AddSubTasks()
+        public async Task AddSubTasks()
         {
             var isP = new NameValueCollection {
                 { RedmineKeys.INCLUDE, RedmineKeys.CHILDREN },
@@ -69,10 +70,13 @@ namespace ProjectRedmine
                 { RedmineKeys.INCLUDE, RedmineKeys.TIME_ENTRY }
             };
             isP.Add(RedmineKeys.PROJECT_ID, RedmineProvider.Project.Id.ToString());
-            isP.Add(RedmineKeys.TRACKER_IDS, $"{DesignId}|{DemandId}|{FunctionId}|{CodeMergeId}");
+            //isP.Add(RedmineKeys.TRACKER_IDS, $"{DesignId}|{DemandId}|{FunctionId}|{CodeMergeId}");
+            isP.Add(RedmineKeys.TRACKER_IDS, $"{DesignId}|{FunctionId}|{CodeMergeId}");
             isP.Add(RedmineKeys.FIXED_VERSION_ID, Version.Id.ToString());
-            isP.Add(RedmineKeys.STATUS_ID, RedmineKeys.ALL);
-            var issues = Manager.GetObjects<Issue>(isP);
+            isP.Add(RedmineKeys.STATUS_ID, RedmineKeys.CLOSED_ON);
+            var request = new Redmine.Net.Api.Net.RequestOptions();
+            request.QueryString = isP;
+            var issues = await Manager.GetAsync<Issue>(request);
             if (issues != null)
             {
                 foreach (var issue in issues)
@@ -85,10 +89,10 @@ namespace ProjectRedmine
                     //        continue;
                     //    }
                     //}
-                    if (issue.Tracker.Id == DemandId)
-                    {
-                        Append(DemandTask, issue);
-                    }
+                    //if (issue.Tracker.Id == DemandId)
+                    //{
+                    //    Append(DemandTask, issue);
+                    //}
                     if (issue.Tracker.Id == DesignId)
                     {
                         Append(DesignTask, issue);
