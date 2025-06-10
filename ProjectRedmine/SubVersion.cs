@@ -71,9 +71,9 @@ namespace ProjectRedmine
             };
             isP.Add(RedmineKeys.PROJECT_ID, RedmineProvider.Project.Id.ToString());
             //isP.Add(RedmineKeys.TRACKER_IDS, $"{DesignId}|{DemandId}|{FunctionId}|{CodeMergeId}");
-            isP.Add(RedmineKeys.TRACKER_IDS, $"{DesignId}|{FunctionId}|{CodeMergeId}");
+            isP.Add(RedmineKeys.TRACKER_IDS, $"{DesignId}|{FunctionId}|{CodeMergeId}|{IssueId}");
             isP.Add(RedmineKeys.FIXED_VERSION_ID, Version.Id.ToString());
-            isP.Add(RedmineKeys.STATUS_ID, RedmineKeys.CLOSED_ON);
+            isP.Add(RedmineKeys.STATUS_ID, RedmineKeys.OPEN_ISSUES);
             var request = new Redmine.Net.Api.Net.RequestOptions();
             request.QueryString = isP;
             var issues = await Manager.GetAsync<Issue>(request);
@@ -101,7 +101,7 @@ namespace ProjectRedmine
                     {
                         Append(DevelopTask, issue);
                     }
-                    if (issue.Tracker.Id == CodeMergeId)
+                    if (issue.Tracker.Id == CodeMergeId|| issue.Tracker.Id ==  IssueId)
                     {
                         Append(TestTask, issue);
                     }
