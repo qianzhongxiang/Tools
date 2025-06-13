@@ -40,11 +40,14 @@
             this.txt_description_redmine = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.btn_undo = new System.Windows.Forms.Button();
+            this.txt_version = new System.Windows.Forms.TextBox();
+            this.txt_version_issue = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btn_OK
             // 
-            this.btn_OK.Location = new System.Drawing.Point(216, 419);
+            this.btn_OK.Location = new System.Drawing.Point(215, 419);
             this.btn_OK.Name = "btn_OK";
             this.btn_OK.Size = new System.Drawing.Size(98, 51);
             this.btn_OK.TabIndex = 0;
@@ -64,7 +67,7 @@
             // 
             // txt_name
             // 
-            this.txt_name.Location = new System.Drawing.Point(12, 75);
+            this.txt_name.Location = new System.Drawing.Point(12, 97);
             this.txt_name.Multiline = true;
             this.txt_name.Name = "txt_name";
             this.txt_name.Size = new System.Drawing.Size(354, 49);
@@ -72,14 +75,14 @@
             // 
             // dt_start
             // 
-            this.dt_start.Location = new System.Drawing.Point(12, 130);
+            this.dt_start.Location = new System.Drawing.Point(12, 152);
             this.dt_start.Name = "dt_start";
             this.dt_start.Size = new System.Drawing.Size(141, 21);
             this.dt_start.TabIndex = 3;
             // 
             // txt_description
             // 
-            this.txt_description.Location = new System.Drawing.Point(12, 157);
+            this.txt_description.Location = new System.Drawing.Point(12, 179);
             this.txt_description.Name = "txt_description";
             this.txt_description.Size = new System.Drawing.Size(354, 226);
             this.txt_description.TabIndex = 5;
@@ -87,7 +90,7 @@
             // 
             // dt_end
             // 
-            this.dt_end.Location = new System.Drawing.Point(215, 130);
+            this.dt_end.Location = new System.Drawing.Point(215, 152);
             this.dt_end.Name = "dt_end";
             this.dt_end.Size = new System.Drawing.Size(151, 21);
             this.dt_end.TabIndex = 3;
@@ -95,7 +98,7 @@
             // txt_name_redmine
             // 
             this.txt_name_redmine.Enabled = false;
-            this.txt_name_redmine.Location = new System.Drawing.Point(382, 75);
+            this.txt_name_redmine.Location = new System.Drawing.Point(382, 97);
             this.txt_name_redmine.Multiline = true;
             this.txt_name_redmine.Name = "txt_name_redmine";
             this.txt_name_redmine.Size = new System.Drawing.Size(369, 49);
@@ -105,7 +108,7 @@
             // 
             this.dt_start_redmine.Checked = false;
             this.dt_start_redmine.Enabled = false;
-            this.dt_start_redmine.Location = new System.Drawing.Point(382, 130);
+            this.dt_start_redmine.Location = new System.Drawing.Point(382, 152);
             this.dt_start_redmine.Name = "dt_start_redmine";
             this.dt_start_redmine.ShowCheckBox = true;
             this.dt_start_redmine.Size = new System.Drawing.Size(158, 21);
@@ -115,7 +118,7 @@
             // 
             this.dt_end_redmine.Checked = false;
             this.dt_end_redmine.Enabled = false;
-            this.dt_end_redmine.Location = new System.Drawing.Point(601, 130);
+            this.dt_end_redmine.Location = new System.Drawing.Point(601, 152);
             this.dt_end_redmine.Name = "dt_end_redmine";
             this.dt_end_redmine.ShowCheckBox = true;
             this.dt_end_redmine.Size = new System.Drawing.Size(150, 21);
@@ -124,7 +127,7 @@
             // txt_description_redmine
             // 
             this.txt_description_redmine.Enabled = false;
-            this.txt_description_redmine.Location = new System.Drawing.Point(382, 157);
+            this.txt_description_redmine.Location = new System.Drawing.Point(382, 179);
             this.txt_description_redmine.Name = "txt_description_redmine";
             this.txt_description_redmine.Size = new System.Drawing.Size(369, 226);
             this.txt_description_redmine.TabIndex = 5;
@@ -150,11 +153,37 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "RemineIssue";
             // 
+            // btn_undo
+            // 
+            this.btn_undo.Location = new System.Drawing.Point(652, 419);
+            this.btn_undo.Name = "btn_undo";
+            this.btn_undo.Size = new System.Drawing.Size(98, 51);
+            this.btn_undo.TabIndex = 0;
+            this.btn_undo.Text = "UnDo";
+            this.btn_undo.UseVisualStyleBackColor = true;
+            this.btn_undo.Click += new System.EventHandler(this.btn_undo_Click);
+            // 
+            // txt_version
+            // 
+            this.txt_version.Location = new System.Drawing.Point(12, 70);
+            this.txt_version.Name = "txt_version";
+            this.txt_version.Size = new System.Drawing.Size(100, 21);
+            this.txt_version.TabIndex = 7;
+            // 
+            // txt_version_issue
+            // 
+            this.txt_version_issue.Location = new System.Drawing.Point(382, 70);
+            this.txt_version_issue.Name = "txt_version_issue";
+            this.txt_version_issue.Size = new System.Drawing.Size(100, 21);
+            this.txt_version_issue.TabIndex = 7;
+            // 
             // UpdateIssue
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(762, 482);
+            this.Controls.Add(this.txt_version_issue);
+            this.Controls.Add(this.txt_version);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txt_description_redmine);
@@ -166,6 +195,7 @@
             this.Controls.Add(this.dt_start);
             this.Controls.Add(this.txt_name);
             this.Controls.Add(this.btn_Cancel);
+            this.Controls.Add(this.btn_undo);
             this.Controls.Add(this.btn_OK);
             this.Name = "UpdateIssue";
             this.Text = "UpdateIssue";
@@ -188,5 +218,8 @@
         private System.Windows.Forms.RichTextBox txt_description_redmine;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btn_undo;
+        private System.Windows.Forms.TextBox txt_version;
+        private System.Windows.Forms.TextBox txt_version_issue;
     }
 }

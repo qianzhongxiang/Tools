@@ -40,24 +40,33 @@ namespace ProjectRedmine
         }
 
         public RedmineManager Manager { get; set; }
-        string RedmineVersionId
+        int? _RedmineVersionId;
+        int? RedmineVersionId
         {
             get
             {
+                if (_RedmineVersionId.HasValue)
+                {
+                    return _RedmineVersionId.Value;
+                }
                 var parameters = new NameValueCollection { };
-                parameters.Add(RedmineKeys.PROJECT_ID, RedmineProvider.Project.Id.ToString());
+                parameters.Add(RedmineKeys.PROJECT_ID, RedmineProvider._Project.Id.ToString());
                 var request = new Redmine.Net.Api.Net.RequestOptions();
                 request.QueryString = parameters;
                 var versions = Manager.Get<Redmine.Net.Api.Types.Version>(request);
-                return versions.FirstOrDefault(v => v.Name == Version)?.Id.ToString();
+                return _RedmineVersionId = versions.FirstOrDefault(v => v.Name == Version)?.Id;
             }
         }
         public async Task UpdateTasksAsync()
         {
-            var isP = new NameValueCollection {};
-            isP.Add(RedmineKeys.PROJECT_ID, RedmineProvider.Project.Id.ToString());
+            if (!RedmineVersionId.HasValue)
+            {
+                return;
+            }
+            var isP = new NameValueCollection { };
+            isP.Add(RedmineKeys.PROJECT_ID, RedmineProvider._Project.Id.ToString());
             isP.Add(RedmineKeys.TRACKER_ID, DemandId.ToString());
-            isP.Add(RedmineKeys.FIXED_VERSION_ID, RedmineVersionId);
+            isP.Add(RedmineKeys.FIXED_VERSION_ID, RedmineVersionId.ToString());
             isP.Add(RedmineKeys.STATUS_ID, RedmineKeys.ALL);
             var now = DateTime.UtcNow;
             //var testDate = DateTime.Now.Subtract(TimeSpan.FromDays(2)).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
@@ -76,7 +85,7 @@ namespace ProjectRedmine
                         ThisAddIn.redmineProvider.UpdateMSTask(issue, item);
                         issues.Remove(issue);
                     }
-                    else if(item.Number1!=0)
+                    else if (item.Number1 != 0)
                     {
                         //Delete
                         item.Delete();

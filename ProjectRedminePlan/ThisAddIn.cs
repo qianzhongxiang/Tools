@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static NPOI.HSSF.UserModel.HeaderFooter;
 using MSProject = Microsoft.Office.Interop.MSProject;
 using Office = Microsoft.Office.Core;
 
@@ -78,6 +79,11 @@ namespace ProjectRedmine
             //    }
             //});
         }
+
+
+
+
+
         private void AddCustomTaskContextMenu()
         {
             try
@@ -172,9 +178,6 @@ namespace ProjectRedmine
         //{
         //}
 
-        //private void Application_ProjectBeforeTaskNew2(MSProject.Project pj, MSProject.EventInfo Info)
-        //{
-        //}
 
         //private void Application_ProjectBeforeTaskDelete2(MSProject.Task tsk, MSProject.EventInfo Info)
         //{
@@ -199,7 +202,7 @@ namespace ProjectRedmine
                     //Info.Cancel = true;
                 }
             }
-          
+
         }
 
         //private void Application_ProjectBeforeResourceChange1(MSProject.Resource res, MSProject.PjField Field, object NewVal, ref bool Cancel)
@@ -237,14 +240,13 @@ namespace ProjectRedmine
 
         private void Application_NewProject(MSProject.Project pj)
         {
-            
             mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(pj);
             if (mSProjectWrapper != null)
             {
                 pj.Change += ActiveProject_Change;
                 pj.Open += ActiveProject_Open;
-                //redmineProvider = mSProjectWrapper.RedmineProvider;
-                AddCustomTaskContextMenu();
+                redmineProvider = mSProjectWrapper.RedmineProvider;
+                //AddCustomTaskContextMenu();
             }
         }
 

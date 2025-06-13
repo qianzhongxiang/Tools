@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 using msproj = Microsoft.Office.Interop.MSProject;
 namespace ProjectRedmine
 {
+    public enum ProjectType
+    {
+        Plan,
+        Resource
+    }
+
     public class MSProjectWrapper
     {
         public static Dictionary<Project, MSProjectWrapper> Wrappers { get; set; } = new Dictionary<Project, MSProjectWrapper>();
@@ -30,9 +36,19 @@ namespace ProjectRedmine
                 var comments = (pj.Comments as string).Split(';');
                 if (comments[0].ToLower() != "plan")
                 {
+
                     return default;
                 }
                 var w = new MSProjectWrapper();
+                switch (comments[0].ToLower())
+                {
+                    case "plan":
+                        w.ProjType = ProjectType.Plan;
+                        break;
+                    case "res":
+                        w.ProjType = ProjectType.Resource;
+                        break;
+                }
                 w.Pj = pj;
                 w.RedmineProj = comments[1];
                 w.Version = comments[2];
@@ -53,9 +69,9 @@ namespace ProjectRedmine
             }
         }
         public RedmineProvider RedmineProvider { get; set; }
-        public Project Pj { get;  set; }
+        public Project Pj { get; set; }
         public string Version { get; set; }
-
+        public ProjectType ProjType { get; set; }
         public string RedmineProj { get; set; }
         public DateTime? UpdateTime { get; set; }
         public string UpdateTimeStr => UpdateTime.HasValue ? UpdateTime.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ") : "";
@@ -69,10 +85,22 @@ namespace ProjectRedmine
                 }
             }
         }
-      
+
         public void SaveParameters()
         {
-            Pj.Comments = $"Plan;{RedmineProj};{Version};{UpdateTimeStr}";
+            var projTypeStr = "";
+            switch (ProjType)
+            {
+                case ProjectType.Plan:
+                    projTypeStr = "Plan";
+                    break;
+                case ProjectType.Resource:
+                    projTypeStr = "Res";
+                    break;
+                default:
+                    break;
+            }
+            Pj.Comments = $"{projTypeStr};{RedmineProj};{Version};{UpdateTimeStr}";
         }
 
     }

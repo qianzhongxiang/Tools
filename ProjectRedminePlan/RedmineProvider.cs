@@ -1,5 +1,6 @@
 ﻿using NPOI.XWPF.UserModel;
 using Redmine.Net.Api;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Net;
 using Redmine.Net.Api.Types;
 using System;
@@ -16,7 +17,7 @@ namespace ProjectRedmine
     public class RedmineProvider
     {
         public RedmineManager Manager { get; set; }
-        public Project Project { get; set; }
+        public Project _Project { get; set; }
         public List<Redmine.Net.Api.Types.Version> Versions { get; set; }
         public List<Redmine.Net.Api.Types.Project> Projects { get; set; }
         public const int DesignId = 7;
@@ -32,11 +33,11 @@ namespace ProjectRedmine
             var opt = new RedmineManagerOptionsBuilder().WithApiKeyAuthentication(apiKey).WithHost(Host);
             Manager = new RedmineManager(opt);
             Projects = Manager.Get<Project>();
-            Project = Projects.Find(p => p.Name.Contains(proj));
+            _Project = Projects.Find(p => p.Name.Contains(proj));
 
             var parameters = new NameValueCollection
             {
-                { RedmineKeys.PROJECT_ID, Project.Id.ToString() }
+                { RedmineKeys.PROJECT_ID, _Project.Id.ToString() }
             };
             var request = new RequestOptions { QueryString = parameters };
             var versions = Manager.Get<Redmine.Net.Api.Types.Version>(request);
@@ -137,6 +138,7 @@ namespace ProjectRedmine
             var issue = Manager.Get<Issue>(id.ToString());
             issue.Subject = tsk.Name;
             issue.Description = tsk.Notes;
+            issue.FixedVersion = IdentifiableName.Create<IdentifiableName>(redV.Id);
             issue.StartDate = tsk.Start;
             issue.DueDate = tsk.Finish;
             Manager.Update<Issue>(id.ToString(), issue);
@@ -159,7 +161,7 @@ namespace ProjectRedmine
         Redmine.Net.Api.Types.Version RedmineVersion(string ver)
         {
             var parameters = new NameValueCollection { };
-            parameters.Add(RedmineKeys.PROJECT_ID, Project.Id.ToString());
+            parameters.Add(RedmineKeys.PROJECT_ID, _Project.Id.ToString());
             var request = new Redmine.Net.Api.Net.RequestOptions();
             request.QueryString = parameters;
             var versions = Manager.Get<Redmine.Net.Api.Types.Version>(request);
@@ -171,12 +173,73 @@ namespace ProjectRedmine
             var redV = RedmineVersion(tsk.OutlineParent.Name);
             issue.Subject = tsk.Name;
             issue.Description = tsk.Notes;
-            issue.Project = Project;
+            issue.Project = _Project;
             issue.StartDate = tsk.Start is null ? DateTime.Now : tsk.Start;
             issue.AssignedTo = IdentifiableName.Create<IdentifiableName>(1);
             issue.FixedVersion = IdentifiableName.Create<IdentifiableName>(redV.Id);
             issue.Tracker = IdentifiableName.Create<IdentifiableName>(DemandId);
             return Manager.Create<Issue>(issue);
+        }
+
+        public Issue StartTask(string subject, string description, string version, DateTime start, DateTime end, bool fun, int parentId, int assignedToID)
+        {
+            var issue = new Redmine.Net.Api.Types.Issue();
+            var redV = RedmineVersion(version);
+            issue.Subject = subject;
+            issue.Description = description;
+            issue.Project = _Project;
+            issue.ParentIssue = IdentifiableName.Create<IdentifiableName>(parentId);
+            issue.StartDate = start;
+            issue.DueDate = end;
+            issue.AssignedTo = IdentifiableName.Create<IdentifiableName>(assignedToID);
+            issue.FixedVersion = IdentifiableName.Create<IdentifiableName>(redV.Id);
+            issue.Tracker = IdentifiableName.Create<IdentifiableName>(fun ? FunctionId : DesignId);
+            issue.EstimatedHours = (float)end.Subtract(start).TotalDays * 8;
+            return Manager.Create<Issue>(issue);
+        }
+
+        public IEnumerable<User> GetALLUsers()
+        {
+            var issue = new Redmine.Net.Api.Types.Issue();
+            var parameters = new NameValueCollection
+            {
+                { RedmineKeys.PROJECT_ID, _Project.Id.ToString() },
+            };
+            var request = new Redmine.Net.Api.Net.RequestOptions();
+            request.QueryString = parameters;
+            return ToIEnumerable(Manager.Get<User>(request));
+        }
+        public IEnumerable<ProjectMembership> GetMemberships()
+        {
+            var ms = Manager.GetProjectMemberships(_Project.Id.ToString());
+            return ms.Items;
+        }
+        public IEnumerable<Issue> GetSubIssues(MSProject.Task tsk)
+        {
+            var issue = new Redmine.Net.Api.Types.Issue();
+            var redV = RedmineVersion(tsk.OutlineParent.Name);
+            var parameters = new NameValueCollection
+            {
+                { RedmineKeys.PROJECT_ID, _Project.Id.ToString() },
+                { RedmineKeys.PARENT_ID,((int)tsk.Number1).ToString()},
+                { RedmineKeys.STATUS_ID, RedmineKeys.ALL }
+            };
+            var request = new Redmine.Net.Api.Net.RequestOptions();
+            request.QueryString = parameters;
+            var issues = Manager.Get<Issue>(request);
+            return ToIEnumerable(issues);
+        }
+
+        private static IEnumerable<T> ToIEnumerable<T>(List<T> issues) where T : new()
+        {
+            if (issues is null)
+            {
+                yield break;
+            }
+            foreach (var item in issues)
+            {
+                yield return item;
+            }
         }
     }
 }

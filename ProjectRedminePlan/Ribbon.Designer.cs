@@ -46,11 +46,14 @@ namespace ProjectRedmine
             this.g_upload = this.Factory.CreateRibbonGroup();
             this.g_download = this.Factory.CreateRibbonGroup();
             this.btn_ResetMSTask = this.Factory.CreateRibbonButton();
+            this.btn_start = this.Factory.CreateRibbonButton();
+            this.g_start = this.Factory.CreateRibbonGroup();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.g_view.SuspendLayout();
             this.g_upload.SuspendLayout();
             this.g_download.SuspendLayout();
+            this.g_start.SuspendLayout();
             this.SuspendLayout();
             // 
             // tab1
@@ -60,6 +63,7 @@ namespace ProjectRedmine
             this.tab1.Groups.Add(this.g_view);
             this.tab1.Groups.Add(this.g_upload);
             this.tab1.Groups.Add(this.g_download);
+            this.tab1.Groups.Add(this.g_start);
             this.tab1.Label = "Redmine";
             this.tab1.Name = "tab1";
             // 
@@ -137,6 +141,20 @@ namespace ProjectRedmine
             this.btn_ResetMSTask.ShowImage = true;
             this.btn_ResetMSTask.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_ResetMSTask_Click);
             // 
+            // btn_start
+            // 
+            this.btn_start.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btn_start.Label = "Start";
+            this.btn_start.Name = "btn_start";
+            this.btn_start.ShowImage = true;
+            this.btn_start.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_start_Click);
+            // 
+            // g_start
+            // 
+            this.g_start.Items.Add(this.btn_start);
+            this.g_start.Label = "Start";
+            this.g_start.Name = "g_start";
+            // 
             // Ribbon
             // 
             this.Name = "Ribbon";
@@ -153,6 +171,8 @@ namespace ProjectRedmine
             this.g_upload.PerformLayout();
             this.g_download.ResumeLayout(false);
             this.g_download.PerformLayout();
+            this.g_start.ResumeLayout(false);
+            this.g_start.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -170,6 +190,8 @@ namespace ProjectRedmine
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup g_upload;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup g_download;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_ResetMSTask;
+        internal Microsoft.Office.Tools.Ribbon.RibbonGroup g_start;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_start;
     }
 
     partial class ThisRibbonCollection

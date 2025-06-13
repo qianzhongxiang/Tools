@@ -28,207 +28,183 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.txt_description_current = new System.Windows.Forms.RichTextBox();
+            this.txt_description = new System.Windows.Forms.RichTextBox();
+            this.list_subissues = new System.Windows.Forms.FlowLayoutPanel();
+            this.panel_users = new System.Windows.Forms.FlowLayoutPanel();
+            this.dt_start_issue = new System.Windows.Forms.DateTimePicker();
             this.btn_createIssue = new System.Windows.Forms.Button();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
-            this.button5 = new System.Windows.Forms.Button();
+            this.dt_end_issue = new System.Windows.Forms.DateTimePicker();
+            this.btn_allDemandsSelected = new System.Windows.Forms.Button();
             this.btn_saveDescription = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.richTextBox3 = new System.Windows.Forms.RichTextBox();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
-            this.dateTimePicker3 = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePicker4 = new System.Windows.Forms.DateTimePicker();
-            this.flowLayoutPanel1.SuspendLayout();
+            this.txt_subject = new System.Windows.Forms.TextBox();
+            this.txt_sub_description = new System.Windows.Forms.RichTextBox();
+            this.rbtn_design = new System.Windows.Forms.RadioButton();
+            this.rbtn_fun = new System.Windows.Forms.RadioButton();
+            this.dt_start = new System.Windows.Forms.DateTimePicker();
+            this.dt_end = new System.Windows.Forms.DateTimePicker();
+            this.list_demands = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
             // 
-            // richTextBox1
+            // txt_description_current
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(360, 16);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(279, 215);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
+            this.txt_description_current.Location = new System.Drawing.Point(300, 2);
+            this.txt_description_current.Name = "txt_description_current";
+            this.txt_description_current.Size = new System.Drawing.Size(339, 304);
+            this.txt_description_current.TabIndex = 0;
+            this.txt_description_current.Text = "";
             // 
-            // checkedListBox1
+            // txt_description
             // 
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(360, 237);
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(279, 228);
-            this.checkedListBox1.TabIndex = 4;
+            this.txt_description.Location = new System.Drawing.Point(15, 311);
+            this.txt_description.Name = "txt_description";
+            this.txt_description.Size = new System.Drawing.Size(279, 278);
+            this.txt_description.TabIndex = 0;
+            this.txt_description.Text = "";
             // 
-            // richTextBox2
+            // list_subissues
             // 
-            this.richTextBox2.Location = new System.Drawing.Point(15, 236);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(279, 229);
-            this.richTextBox2.TabIndex = 0;
-            this.richTextBox2.Text = "";
+            this.list_subissues.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.list_subissues.Location = new System.Drawing.Point(12, 12);
+            this.list_subissues.Name = "list_subissues";
+            this.list_subissues.Size = new System.Drawing.Size(279, 265);
+            this.list_subissues.TabIndex = 8;
             // 
-            // radioButton1
+            // panel_users
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(3, 3);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(95, 16);
-            this.radioButton1.TabIndex = 7;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "radioButton1";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.panel_users.Location = new System.Drawing.Point(645, 2);
+            this.panel_users.Name = "panel_users";
+            this.panel_users.Size = new System.Drawing.Size(365, 304);
+            this.panel_users.TabIndex = 9;
             // 
-            // flowLayoutPanel1
+            // dt_start_issue
             // 
-            this.flowLayoutPanel1.Controls.Add(this.radioButton1);
-            this.flowLayoutPanel1.Controls.Add(this.radioButton2);
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 12);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(279, 183);
-            this.flowLayoutPanel1.TabIndex = 8;
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(3, 25);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(95, 16);
-            this.radioButton2.TabIndex = 8;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "radioButton2";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // flowLayoutPanel2
-            // 
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(674, 15);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(336, 145);
-            this.flowLayoutPanel2.TabIndex = 9;
-            // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(15, 201);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(119, 21);
-            this.dateTimePicker1.TabIndex = 10;
+            this.dt_start_issue.Location = new System.Drawing.Point(15, 283);
+            this.dt_start_issue.Name = "dt_start_issue";
+            this.dt_start_issue.Size = new System.Drawing.Size(119, 21);
+            this.dt_start_issue.TabIndex = 10;
             // 
             // btn_createIssue
             // 
-            this.btn_createIssue.Location = new System.Drawing.Point(615, 513);
+            this.btn_createIssue.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btn_createIssue.Location = new System.Drawing.Point(615, 599);
             this.btn_createIssue.Name = "btn_createIssue";
-            this.btn_createIssue.Size = new System.Drawing.Size(75, 23);
+            this.btn_createIssue.Size = new System.Drawing.Size(100, 40);
             this.btn_createIssue.TabIndex = 11;
             this.btn_createIssue.Text = "创建问题单";
             this.btn_createIssue.UseVisualStyleBackColor = true;
+            this.btn_createIssue.Click += new System.EventHandler(this.btn_createIssue_Click);
             // 
-            // dateTimePicker2
+            // dt_end_issue
             // 
-            this.dateTimePicker2.Location = new System.Drawing.Point(147, 201);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(147, 21);
-            this.dateTimePicker2.TabIndex = 13;
+            this.dt_end_issue.Location = new System.Drawing.Point(147, 283);
+            this.dt_end_issue.Name = "dt_end_issue";
+            this.dt_end_issue.Size = new System.Drawing.Size(147, 21);
+            this.dt_end_issue.TabIndex = 13;
             // 
-            // button5
+            // btn_allDemandsSelected
             // 
-            this.button5.Location = new System.Drawing.Point(35, 507);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 14;
-            this.button5.Text = "button5";
-            this.button5.UseVisualStyleBackColor = true;
+            this.btn_allDemandsSelected.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btn_allDemandsSelected.Location = new System.Drawing.Point(300, 600);
+            this.btn_allDemandsSelected.Name = "btn_allDemandsSelected";
+            this.btn_allDemandsSelected.Size = new System.Drawing.Size(100, 40);
+            this.btn_allDemandsSelected.TabIndex = 14;
+            this.btn_allDemandsSelected.Text = "全选";
+            this.btn_allDemandsSelected.UseVisualStyleBackColor = true;
+            this.btn_allDemandsSelected.Click += new System.EventHandler(this.btn_allDemandsSelected_Click);
             // 
             // btn_saveDescription
             // 
-            this.btn_saveDescription.Location = new System.Drawing.Point(476, 513);
+            this.btn_saveDescription.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btn_saveDescription.Location = new System.Drawing.Point(476, 599);
             this.btn_saveDescription.Name = "btn_saveDescription";
-            this.btn_saveDescription.Size = new System.Drawing.Size(75, 23);
+            this.btn_saveDescription.Size = new System.Drawing.Size(100, 40);
             this.btn_saveDescription.TabIndex = 15;
             this.btn_saveDescription.Text = "保存描述";
             this.btn_saveDescription.UseVisualStyleBackColor = true;
             // 
-            // textBox1
+            // txt_subject
             // 
-            this.textBox1.Location = new System.Drawing.Point(674, 166);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(336, 21);
-            this.textBox1.TabIndex = 16;
+            this.txt_subject.Location = new System.Drawing.Point(674, 311);
+            this.txt_subject.Name = "txt_subject";
+            this.txt_subject.Size = new System.Drawing.Size(336, 21);
+            this.txt_subject.TabIndex = 16;
             // 
-            // richTextBox3
+            // txt_sub_description
             // 
-            this.richTextBox3.Location = new System.Drawing.Point(674, 236);
-            this.richTextBox3.Name = "richTextBox3";
-            this.richTextBox3.Size = new System.Drawing.Size(336, 229);
-            this.richTextBox3.TabIndex = 17;
-            this.richTextBox3.Text = "";
+            this.txt_sub_description.Location = new System.Drawing.Point(674, 367);
+            this.txt_sub_description.Name = "txt_sub_description";
+            this.txt_sub_description.Size = new System.Drawing.Size(336, 222);
+            this.txt_sub_description.TabIndex = 17;
+            this.txt_sub_description.Text = "";
             // 
-            // radioButton3
+            // rbtn_design
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Checked = true;
-            this.radioButton3.Location = new System.Drawing.Point(360, 472);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(47, 16);
-            this.radioButton3.TabIndex = 18;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "设计";
-            this.radioButton3.UseVisualStyleBackColor = true;
+            this.rbtn_design.Checked = true;
+            this.rbtn_design.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.rbtn_design.Location = new System.Drawing.Point(752, 600);
+            this.rbtn_design.Name = "rbtn_design";
+            this.rbtn_design.Size = new System.Drawing.Size(60, 30);
+            this.rbtn_design.TabIndex = 18;
+            this.rbtn_design.TabStop = true;
+            this.rbtn_design.Text = "设计";
+            this.rbtn_design.UseVisualStyleBackColor = true;
             // 
-            // radioButton4
+            // rbtn_fun
             // 
-            this.radioButton4.AutoSize = true;
-            this.radioButton4.Location = new System.Drawing.Point(426, 471);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(47, 16);
-            this.radioButton4.TabIndex = 19;
-            this.radioButton4.Text = "功能";
-            this.radioButton4.UseVisualStyleBackColor = true;
+            this.rbtn_fun.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.rbtn_fun.Location = new System.Drawing.Point(834, 600);
+            this.rbtn_fun.Name = "rbtn_fun";
+            this.rbtn_fun.Size = new System.Drawing.Size(60, 30);
+            this.rbtn_fun.TabIndex = 19;
+            this.rbtn_fun.Text = "功能";
+            this.rbtn_fun.UseVisualStyleBackColor = true;
             // 
-            // dateTimePicker3
+            // dt_start
             // 
-            this.dateTimePicker3.Location = new System.Drawing.Point(674, 193);
-            this.dateTimePicker3.Name = "dateTimePicker3";
-            this.dateTimePicker3.Size = new System.Drawing.Size(151, 21);
-            this.dateTimePicker3.TabIndex = 10;
+            this.dt_start.Location = new System.Drawing.Point(674, 338);
+            this.dt_start.Name = "dt_start";
+            this.dt_start.Size = new System.Drawing.Size(151, 21);
+            this.dt_start.TabIndex = 10;
             // 
-            // dateTimePicker4
+            // dt_end
             // 
-            this.dateTimePicker4.Location = new System.Drawing.Point(867, 193);
-            this.dateTimePicker4.Name = "dateTimePicker4";
-            this.dateTimePicker4.Size = new System.Drawing.Size(143, 21);
-            this.dateTimePicker4.TabIndex = 13;
+            this.dt_end.Location = new System.Drawing.Point(867, 338);
+            this.dt_end.Name = "dt_end";
+            this.dt_end.Size = new System.Drawing.Size(143, 21);
+            this.dt_end.TabIndex = 13;
+            // 
+            // list_demands
+            // 
+            this.list_demands.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.list_demands.Location = new System.Drawing.Point(300, 312);
+            this.list_demands.Name = "list_demands";
+            this.list_demands.Size = new System.Drawing.Size(339, 277);
+            this.list_demands.TabIndex = 9;
             // 
             // StartDemand
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1022, 577);
-            this.Controls.Add(this.radioButton4);
-            this.Controls.Add(this.radioButton3);
-            this.Controls.Add(this.richTextBox3);
-            this.Controls.Add(this.textBox1);
+            this.ClientSize = new System.Drawing.Size(1022, 656);
+            this.Controls.Add(this.rbtn_fun);
+            this.Controls.Add(this.rbtn_design);
+            this.Controls.Add(this.txt_sub_description);
+            this.Controls.Add(this.txt_subject);
             this.Controls.Add(this.btn_saveDescription);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.dateTimePicker4);
-            this.Controls.Add(this.dateTimePicker2);
-            this.Controls.Add(this.dateTimePicker3);
+            this.Controls.Add(this.btn_allDemandsSelected);
+            this.Controls.Add(this.dt_end);
+            this.Controls.Add(this.dt_end_issue);
+            this.Controls.Add(this.dt_start);
             this.Controls.Add(this.btn_createIssue);
-            this.Controls.Add(this.dateTimePicker1);
-            this.Controls.Add(this.flowLayoutPanel2);
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.Controls.Add(this.checkedListBox1);
-            this.Controls.Add(this.richTextBox2);
-            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.dt_start_issue);
+            this.Controls.Add(this.list_demands);
+            this.Controls.Add(this.panel_users);
+            this.Controls.Add(this.list_subissues);
+            this.Controls.Add(this.txt_description);
+            this.Controls.Add(this.txt_description_current);
             this.Name = "StartDemand";
             this.Text = "StartDemand";
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -236,23 +212,21 @@
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.CheckedListBox checkedListBox1;
-        private System.Windows.Forms.RichTextBox richTextBox2;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.RichTextBox txt_description_current;
+        private System.Windows.Forms.RichTextBox txt_description;
+        private System.Windows.Forms.FlowLayoutPanel list_subissues;
+        private System.Windows.Forms.FlowLayoutPanel panel_users;
+        private System.Windows.Forms.DateTimePicker dt_start_issue;
         private System.Windows.Forms.Button btn_createIssue;
-        private System.Windows.Forms.DateTimePicker dateTimePicker2;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.DateTimePicker dt_end_issue;
+        private System.Windows.Forms.Button btn_allDemandsSelected;
         private System.Windows.Forms.Button btn_saveDescription;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.RichTextBox richTextBox3;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton4;
-        private System.Windows.Forms.DateTimePicker dateTimePicker3;
-        private System.Windows.Forms.DateTimePicker dateTimePicker4;
+        private System.Windows.Forms.TextBox txt_subject;
+        private System.Windows.Forms.RichTextBox txt_sub_description;
+        private System.Windows.Forms.RadioButton rbtn_design;
+        private System.Windows.Forms.RadioButton rbtn_fun;
+        private System.Windows.Forms.DateTimePicker dt_start;
+        private System.Windows.Forms.DateTimePicker dt_end;
+        private System.Windows.Forms.FlowLayoutPanel list_demands;
     }
 }

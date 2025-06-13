@@ -27,6 +27,8 @@ namespace ProjectRedmine
             txt_description.Text = task.Notes;
             dt_start.Value = task.Start;
             dt_end.Value = task.Finish;
+            txt_version.Text = task.OutlineParent.Name;
+            txt_version_issue.Text = issue.FixedVersion.Name;
 
             txt_name_redmine.Text = issue.Subject;
             txt_description_redmine.Text = issue.Description;
@@ -56,6 +58,13 @@ namespace ProjectRedmine
         {
             DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        private void btn_undo_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Ignore;
+            Close();
+
         }
     }
 }

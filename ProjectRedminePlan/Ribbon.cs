@@ -192,7 +192,7 @@ namespace ProjectRedmine
                 {
                     var issue = redmineProvider.GetIssue((int)item.Number1);
                     var res = new UpdateIssue(item, issue).ShowDialog();
-                    if (res == System.Windows.Forms.DialogResult.OK)
+                    if (res == System.Windows.Forms.DialogResult.OK || res == DialogResult.Ignore)
                     {
                         redmineProvider.UpdateIssue(item);
                     }
@@ -210,6 +210,19 @@ namespace ProjectRedmine
                 {
                     var issue = redmineProvider.GetIssue((int)item.Number1);
                     redmineProvider.UpdateMSTask(issue, item);
+                }
+            }
+        }
+
+        private void btn_start_Click(object sender, RibbonControlEventArgs e)
+        {
+            LoadProvider();
+            var tasks = this.Application.ActiveSelection.Tasks;
+            foreach (MSProject.Task item in tasks)
+            {
+                if (item.OutlineLevel == 2 && item.Number1 > 0.5)
+                {
+                    new StartDemand(item, redmineProvider).ShowDialog();
                 }
             }
         }
