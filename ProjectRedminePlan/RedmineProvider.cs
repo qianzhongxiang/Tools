@@ -67,16 +67,16 @@ namespace ProjectRedmine
             ThisAddIn.Fresh = true;
             try
             {
-                task.Manual = false;
-                task.Start = issue.StartDate;
+                task.Manual = true;
+                task.Start = issue.StartDate.Value.AddHours(8);
                 if (issue.DueDate != null)
                 {
-                    var a = issue.DueDate.Value.AddHours(18);
-                    task.Finish = a;
+                    //var a = issue.DueDate.Value.AddHours(18);
+                    task.Finish = issue.DueDate.Value.AddHours(17);
                 }
                 else
                 {
-                    task.Finish = issue.StartDate.Value.AddDays(3);
+                    task.Finish = issue.StartDate.Value.AddDays(3).AddHours(17);
                 }
                 //if (issue.EstimatedHours == null || issue.EstimatedHours < 8)
                 //{
@@ -136,7 +136,7 @@ namespace ProjectRedmine
             var redV = RedmineVersion(tsk.OutlineParent.Name);
             System.Diagnostics.Debug.WriteLine($"{id},{tsk.Start},{tsk.Finish}");
             var issue = Manager.Get<Issue>(id.ToString());
-            issue.Subject = tsk.Name;
+            issue.Subject = tsk.Name.Replace("[需求]","");
             issue.Description = tsk.Notes;
             issue.FixedVersion = IdentifiableName.Create<IdentifiableName>(redV.Id);
             issue.StartDate = tsk.Start;

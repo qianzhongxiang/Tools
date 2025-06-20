@@ -30,6 +30,7 @@ namespace ProjectRedmine
                 var res = MessageBox.Show("存在修改过的公开需求，应该先处理，是否先处理修改", "***", MessageBoxButtons.YesNo);
                 if (res == DialogResult.Yes)
                 {
+                    btn_publish_Click(null,null);
                     return;
                 }
             }
@@ -173,7 +174,7 @@ namespace ProjectRedmine
             {
                 foreach (MSProject.Task item in tasks)
                 {
-                    if (item.Number1 <= 0.5)
+                    if (item.Number1 > 0.5)
                     {
                         continue;
                     }

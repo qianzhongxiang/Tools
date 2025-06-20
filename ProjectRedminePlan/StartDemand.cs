@@ -36,11 +36,11 @@ namespace ProjectRedmine
         {
             if (rbtn_design.Checked)
             {
-                txt_subject.Text = $"[设计]{Issue.Subject}";
+                txt_subject.Text = $"[设计]{Issue.Subject.Replace("[需求]", "")}";
             }
             else if (rbtn_fun.Checked)
             {
-                txt_subject.Text = $"[开发]{Issue.Subject}";
+                txt_subject.Text = $"[开发]{Issue.Subject.Replace("[需求]", "")}";
             }
         }
 
