@@ -77,13 +77,7 @@ namespace ProjectRedmine
         public string UpdateTimeStr => UpdateTime.HasValue ? UpdateTime.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ") : "";
         public IEnumerable<msproj.Task> Versions()
         {
-            foreach (msproj.Task item in Pj.Tasks)
-            {
-                if (item.OutlineLevel == 1)
-                {
-                    yield return item;
-                }
-            }
+           return Pj.Tasks.Cast<msproj.Task>().Where(i => i.OutlineLevel == 1).ToList();
         }
 
         public void SaveParameters()

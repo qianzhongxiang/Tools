@@ -67,7 +67,7 @@ namespace ProjectRedmine
             isP.Add(RedmineKeys.PROJECT_ID, RedmineProvider._Project.Id.ToString());
             isP.Add(RedmineKeys.TRACKER_ID, DemandId.ToString());
             isP.Add(RedmineKeys.FIXED_VERSION_ID, RedmineVersionId.ToString());
-            isP.Add(RedmineKeys.STATUS_ID, RedmineKeys.ALL);
+            isP.Add(RedmineKeys.STATUS, "!" + RedmineKeys.CLOSE);
             var now = DateTime.UtcNow;
             //var testDate = DateTime.Now.Subtract(TimeSpan.FromDays(2)).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
             //isP.Add(RedmineKeys.UPDATED_ON, $">={testDate}");

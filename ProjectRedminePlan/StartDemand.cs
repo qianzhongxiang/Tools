@@ -71,6 +71,7 @@ namespace ProjectRedmine
         private void LoadSubIssues()
         {
             var issues = RedmineProvider.GetSubIssues(Tsk);
+            list_subissues.Controls.Clear();
             foreach (var issue in issues)
             {
                 var rb = new RadioButton { Text = $"[{issue.Tracker.Name}]({issue.AssignedTo.Name}){issue.Subject}", Tag = issue, AutoSize = true,Dock= DockStyle.Fill, Width = list_subissues.Width };

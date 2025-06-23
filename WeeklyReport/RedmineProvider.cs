@@ -39,7 +39,7 @@ namespace ProjectRedmine
 
             return paragraph.CreateHyperlinkRun(rId);
         }
-        public void GenerateJournal(IEnumerable<Project> projects,Project lpP, DateTime start)
+        public void GenerateJournal(IEnumerable<Project> projects, Project lpP, DateTime start)
         {
             var parameters = new NameValueCollection { };
             var startTime = start.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
@@ -65,7 +65,8 @@ namespace ProjectRedmine
                     if (issue.Tracker.Id == FunctionId || issue.Tracker.Id == DesignId)
                     {
                         functions.Add(issue);
-                    }else if (issue.Tracker.Id == IssueId)
+                    }
+                    else if (issue.Tracker.Id == IssueId)
                     {
                         issuesList.Add(issue);
                     }
@@ -84,7 +85,7 @@ namespace ProjectRedmine
                     issuesList.AddRange(list);
                 }
             }
-            issuesList= issuesList.DistinctBy(i => i.Id).ToList();
+            issuesList = issuesList.DistinctBy(i => i.Id).ToList();
 
             using (XWPFDocument doc = new XWPFDocument())
             {
@@ -143,17 +144,20 @@ namespace ProjectRedmine
                 //parameters.Add(RedmineKeys.TRACKER_ID, $"{IssueId}");
                 parameters.Add(RedmineKeys.STATUS_ID, RedmineKeys.ALL);
                 var list = Manager.GetObjects<Issue>(parameters);
-                foreach (var item in list)
+                if (list != null)
                 {
-                    p1 = doc.CreateParagraph();
-                    p1.Alignment = ParagraphAlignment.LEFT;
-                    XWPFHyperlinkRun hyperlinkrun = CreateHyperlinkRun(p1, $"{Host}/issues/{item.Id}");
-                    hyperlinkrun.SetText($"{item.Tracker.Name} #{item.Id}");
-                    hyperlinkrun.SetColor("0000FF");
-                    hyperlinkrun.Underline = UnderlinePatterns.Single;
-                    r1 = p1.CreateRun();
-                    r1.SetText($" {item.Subject}");
-                    r1.FontSize = 11;
+                    foreach (var item in list)
+                    {
+                        p1 = doc.CreateParagraph();
+                        p1.Alignment = ParagraphAlignment.LEFT;
+                        XWPFHyperlinkRun hyperlinkrun = CreateHyperlinkRun(p1, $"{Host}/issues/{item.Id}");
+                        hyperlinkrun.SetText($"{item.Tracker.Name} #{item.Id}");
+                        hyperlinkrun.SetColor("0000FF");
+                        hyperlinkrun.Underline = UnderlinePatterns.Single;
+                        r1 = p1.CreateRun();
+                        r1.SetText($" {item.Subject}");
+                        r1.FontSize = 11;
+                    }
                 }
 
                 p1 = doc.CreateParagraph();

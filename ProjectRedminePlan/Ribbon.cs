@@ -30,7 +30,7 @@ namespace ProjectRedmine
                 var res = MessageBox.Show("存在修改过的公开需求，应该先处理，是否先处理修改", "***", MessageBoxButtons.YesNo);
                 if (res == DialogResult.Yes)
                 {
-                    btn_publish_Click(null,null);
+                    btn_publish_Click(null, null);
                     return;
                 }
             }
@@ -43,7 +43,8 @@ namespace ProjectRedmine
 
 
             var now = DateTime.UtcNow;
-            foreach (var item in mSProjectWrapper.Versions())
+            var versions = mSProjectWrapper.Versions();
+            foreach (var item in versions)
             {
                 var subv = new SubVersion(mSProjectWrapper, item.Name, item, redmineProvider);
                 await subv.UpdateTasksAsync();
