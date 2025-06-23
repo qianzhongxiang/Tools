@@ -25,6 +25,67 @@ namespace ProjectRedmine
         private async void btnRefresh_Click(object sender, RibbonControlEventArgs e)
         {
             LoadProvider();
+            switch (mSProjectWrapper.ProjType)
+            {
+                case ProjectType.Plan:
+                    await PlanRefresh();
+                    break;
+                case ProjectType.Resource:
+                    await ResourceRefresh();
+                    break;
+                default:
+                    return;
+            }
+            DateTime now = DateTime.UtcNow;
+            mSProjectWrapper.UpdateTime = now;
+            mSProjectWrapper.SaveParameters();
+        }
+        private async Task ResourceRefresh()
+        {
+            ThisAddIn.Fresh = true;
+            try
+            {
+                if (this.Application.ActiveProject.Comments is null)
+                {
+                    System.Windows.Forms.MessageBox.Show("please set version first");
+                    return;
+                }
+                //redmineProvider = new RedmineProvider(this.Application.ActiveProject.Comments as string);
+                mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
+                redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
+
+                var tasks = this.Application.ActiveProject.Tasks;
+                var c = this.Application.ActiveProject.Tasks.Count;
+                for (; c > 0; c--)
+                {
+                    tasks[c].Delete();
+                }
+                var now = DateTime.UtcNow;
+                foreach (var item in redmineProvider.Versions)
+                {
+                    if (item.Status == Redmine.Net.Api.Types.VersionStatus.Open)
+                    {
+                        var subv = new ResourceSubVersion(mSProjectWrapper, item, redmineProvider);
+                        subv.Create();
+                        await subv.AddSubTasks();
+                    }
+                }
+                mSProjectWrapper.UpdateTime = now;
+                mSProjectWrapper.SaveParameters();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                ThisAddIn.Fresh = false;
+            }
+        }
+
+        private async Task PlanRefresh()
+        {
             if (mSProjectWrapper.Pj.Tasks.Cast<MSProject.Task>().Any(item => item.OutlineLevel == 2 && item.Number2 > 0.5 && item.Number1 > 0.5))
             {
                 var res = MessageBox.Show("存在修改过的公开需求，应该先处理，是否先处理修改", "***", MessageBoxButtons.YesNo);
@@ -42,15 +103,12 @@ namespace ProjectRedmine
             //redmineProvider = new RedmineProvider(this.Application.ActiveProject.Comments as string);
 
 
-            var now = DateTime.UtcNow;
             var versions = mSProjectWrapper.Versions();
             foreach (var item in versions)
             {
                 var subv = new SubVersion(mSProjectWrapper, item.Name, item, redmineProvider);
                 await subv.UpdateTasksAsync();
             }
-            mSProjectWrapper.UpdateTime = now;
-            mSProjectWrapper.SaveParameters();
         }
 
         private void LoadProvider()
@@ -98,26 +156,6 @@ namespace ProjectRedmine
             this.Application.CustomFieldRename(MSProject.PjCustomField.pjCustomTaskNumber2, "Changed");
         }
 
-        private void btnJournal_Click(object sender, RibbonControlEventArgs e)
-        {
-            //mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
-            //redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
-            //new Report(redmineProvider).ShowDialog();
-        }
-
-        //private void btnTest_Click(object sender, RibbonControlEventArgs e)
-        //{
-        //    if (this.Application.ActiveSelection.Tasks.Count == 0)
-        //    {
-        //        return;
-        //    }
-        //    foreach (MSProject.Task t in this.Application.ActiveSelection.Tasks)
-        //    {
-        //        mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
-        //        redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
-        //        redmineProvider.UpdateIssue(t);
-        //    }
-        //}
 
         private void btnURL_Click(object sender, RibbonControlEventArgs e)
         {
@@ -146,30 +184,15 @@ namespace ProjectRedmine
             }
 
 
-
-            //if (resources != null)
-            //{
-            //    foreach (MSProject.Resource item in resources)
-            //    {
-            //        var id = item.ID;
-            //        var name = item.Name;
-            //        var code = item.Code;
-            //        var assigns = item.Assignments;
-            //        foreach (MSProject.Assignment assignment in assigns)
-            //        {
-            //            var p = assignment.TeamStatusPending;
-            //            System.Diagnostics.Debug.WriteLine($"{assignment.Task.Name} {p} {assignment.UniqueID}");
-            //        }
-            //        string target = $"{RedmineProvider.Host}/issues/{item.Number1}";
-            //        System.Diagnostics.Process.Start(target);
-            //    }
-            //}
-
         }
 
         private void btn_publish_Click(object sender, RibbonControlEventArgs e)
         {
             LoadProvider();
+            if (mSProjectWrapper.ProjType != ProjectType.Plan)
+            {
+                return;
+            }
             var tasks = this.Application.ActiveSelection.Tasks;
             if (tasks != null)
             {
@@ -188,6 +211,10 @@ namespace ProjectRedmine
         private void btn_updateIssue_Click(object sender, RibbonControlEventArgs e)
         {
             LoadProvider();
+            if (mSProjectWrapper.ProjType != ProjectType.Plan)
+            {
+                return;
+            }
             foreach (MSProject.Task item in mSProjectWrapper.Pj.Tasks)
             {
                 if (item.OutlineLevel == 2 && item.Number2 > 0.5 && item.Number1 > 0.5)
@@ -205,6 +232,10 @@ namespace ProjectRedmine
         private void btn_ResetMSTask_Click(object sender, RibbonControlEventArgs e)
         {
             LoadProvider();
+            if (mSProjectWrapper.ProjType != ProjectType.Plan)
+            {
+                return;
+            }
             var tasks = this.Application.ActiveSelection.Tasks;
             foreach (MSProject.Task item in tasks)
             {
@@ -219,6 +250,10 @@ namespace ProjectRedmine
         private void btn_start_Click(object sender, RibbonControlEventArgs e)
         {
             LoadProvider();
+            if (mSProjectWrapper.ProjType != ProjectType.Plan)
+            {
+                return;
+            }
             var tasks = this.Application.ActiveSelection.Tasks;
             foreach (MSProject.Task item in tasks)
             {

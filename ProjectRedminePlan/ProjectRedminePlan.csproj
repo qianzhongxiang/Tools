@@ -255,6 +255,7 @@
     <Compile Include="StartDemand.Designer.cs">
       <DependentUpon>StartDemand.cs</DependentUpon>
     </Compile>
+    <Compile Include="ResourceSubVersion.cs" />
     <Compile Include="UpdateIssue.cs">
       <SubType>Form</SubType>
     </Compile>

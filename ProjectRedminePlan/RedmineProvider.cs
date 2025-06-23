@@ -136,7 +136,7 @@ namespace ProjectRedmine
             var redV = RedmineVersion(tsk.OutlineParent.Name);
             System.Diagnostics.Debug.WriteLine($"{id},{tsk.Start},{tsk.Finish}");
             var issue = Manager.Get<Issue>(id.ToString());
-            issue.Subject = tsk.Name.Replace("[需求]","");
+            issue.Subject = tsk.Name.Replace("[需求]", "");
             issue.Description = tsk.Notes;
             issue.FixedVersion = IdentifiableName.Create<IdentifiableName>(redV.Id);
             issue.StartDate = tsk.Start;
@@ -158,6 +158,9 @@ namespace ProjectRedmine
 
 
         }
+
+
+
         Redmine.Net.Api.Types.Version RedmineVersion(string ver)
         {
             var parameters = new NameValueCollection { };
@@ -175,6 +178,7 @@ namespace ProjectRedmine
             issue.Description = tsk.Notes;
             issue.Project = _Project;
             issue.StartDate = tsk.Start is null ? DateTime.Now : tsk.Start;
+            issue.DueDate = tsk.Finish;
             issue.AssignedTo = IdentifiableName.Create<IdentifiableName>(1);
             issue.FixedVersion = IdentifiableName.Create<IdentifiableName>(redV.Id);
             issue.Tracker = IdentifiableName.Create<IdentifiableName>(DemandId);

@@ -34,11 +34,7 @@ namespace ProjectRedmine
                     throw new ArgumentNullException(nameof(pj));
                 }
                 var comments = (pj.Comments as string).Split(';');
-                if (comments[0].ToLower() != "plan")
-                {
-
-                    return default;
-                }
+               
                 var w = new MSProjectWrapper();
                 switch (comments[0].ToLower())
                 {
@@ -48,6 +44,8 @@ namespace ProjectRedmine
                     case "res":
                         w.ProjType = ProjectType.Resource;
                         break;
+                    default:
+                        return default;
                 }
                 w.Pj = pj;
                 w.RedmineProj = comments[1];
