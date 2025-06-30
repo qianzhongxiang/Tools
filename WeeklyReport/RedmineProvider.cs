@@ -105,7 +105,7 @@ namespace ProjectRedmine
                     hyperlinkrun.SetColor("0000FF");
                     hyperlinkrun.Underline = UnderlinePatterns.Single;
                     r1 = p1.CreateRun();
-                    r1.SetText($" {item.Subject}");
+                    r1.SetText($" [{GetDoneRatio(item)}%] {item.Subject}");
                     r1.FontSize = 13;
 
                     p1 = doc.CreateParagraph();
@@ -131,7 +131,8 @@ namespace ProjectRedmine
                     hyperlinkrun.SetColor("0000FF");
                     hyperlinkrun.Underline = UnderlinePatterns.Single;
                     r1 = p1.CreateRun();
-                    r1.SetText($" {item.Subject}");
+                    GetDoneRatio(item);
+                    r1.SetText($" [{GetDoneRatio(item)}%] {item.Subject}");
                     r1.FontSize = 11;
                 }
                 p1 = doc.CreateParagraph();
@@ -155,7 +156,7 @@ namespace ProjectRedmine
                         hyperlinkrun.SetColor("0000FF");
                         hyperlinkrun.Underline = UnderlinePatterns.Single;
                         r1 = p1.CreateRun();
-                        r1.SetText($" {item.Subject}");
+                        r1.SetText($" [{GetDoneRatio(item)}%] {item.Subject}");
                         r1.FontSize = 11;
                     }
                 }
@@ -172,5 +173,15 @@ namespace ProjectRedmine
             }
         }
 
+        private static double GetDoneRatio(Issue item)
+        {
+            if (item.Status.Name == "已关闭" || item.Status.Name.ToLower() == "closed")
+            {
+                return 100;
+            }else
+            {
+                return item.DoneRatio ?? 0;
+            }
+        }
     }
 }

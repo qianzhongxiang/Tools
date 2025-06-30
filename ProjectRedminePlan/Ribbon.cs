@@ -91,7 +91,7 @@ namespace ProjectRedmine
                 var res = MessageBox.Show("存在修改过的公开需求，应该先处理，是否先处理修改", "***", MessageBoxButtons.YesNo);
                 if (res == DialogResult.Yes)
                 {
-                    btn_publish_Click(null, null);
+                    btn_updateIssue_Click(null, null);
                     return;
                 }
             }
