@@ -178,5 +178,10 @@ namespace ProjectRedmine
                 cb.Checked = to;
             }
         }
+
+        private void btn_designAchieve_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

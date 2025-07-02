@@ -64,7 +64,6 @@ namespace ProjectRedmine
         {
             DialogResult = DialogResult.Ignore;
             Close();
-
         }
     }
 }

@@ -44,6 +44,7 @@
             this.dt_start = new System.Windows.Forms.DateTimePicker();
             this.dt_end = new System.Windows.Forms.DateTimePicker();
             this.list_demands = new System.Windows.Forms.FlowLayoutPanel();
+            this.btn_designAchieve = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txt_description_current
@@ -182,11 +183,22 @@
             this.list_demands.Size = new System.Drawing.Size(339, 277);
             this.list_demands.TabIndex = 9;
             // 
+            // btn_designAchieve
+            // 
+            this.btn_designAchieve.Location = new System.Drawing.Point(101, 601);
+            this.btn_designAchieve.Name = "btn_designAchieve";
+            this.btn_designAchieve.Size = new System.Drawing.Size(97, 38);
+            this.btn_designAchieve.TabIndex = 20;
+            this.btn_designAchieve.Text = "归档设计";
+            this.btn_designAchieve.UseVisualStyleBackColor = true;
+            this.btn_designAchieve.Click += new System.EventHandler(this.btn_designAchieve_Click);
+            // 
             // StartDemand
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1022, 656);
+            this.Controls.Add(this.btn_designAchieve);
             this.Controls.Add(this.rbtn_fun);
             this.Controls.Add(this.rbtn_design);
             this.Controls.Add(this.txt_sub_description);
@@ -228,5 +240,6 @@
         private System.Windows.Forms.DateTimePicker dt_start;
         private System.Windows.Forms.DateTimePicker dt_end;
         private System.Windows.Forms.FlowLayoutPanel list_demands;
+        private System.Windows.Forms.Button btn_designAchieve;
     }
 }

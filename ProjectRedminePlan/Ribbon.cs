@@ -221,9 +221,13 @@ namespace ProjectRedmine
                 {
                     var issue = redmineProvider.GetIssue((int)item.Number1);
                     var res = new UpdateIssue(item, issue).ShowDialog();
-                    if (res == System.Windows.Forms.DialogResult.OK || res == DialogResult.Ignore)
+                    if (res == System.Windows.Forms.DialogResult.OK)
                     {
                         redmineProvider.UpdateIssue(item);
+                    }
+                    else if (res == System.Windows.Forms.DialogResult.Ignore)
+                    {
+                        redmineProvider.UpdateMSTask(issue, item);
                     }
                 }
             }

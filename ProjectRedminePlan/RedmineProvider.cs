@@ -86,6 +86,7 @@ namespace ProjectRedmine
                 //{
                 //    newTask.Duration = issue.EstimatedHours * 60;
                 //}
+                task.Name = $"[{issue.Tracker.Name}] {issue.Subject}";
                 task.ResourceNames = issue.AssignedTo?.Name ?? "";
                 task.OutlineLevel = 2;
                 if (issue.Status.Id == 5 || issue.Status.Id == 6)
@@ -215,7 +216,13 @@ namespace ProjectRedmine
         }
         public IEnumerable<ProjectMembership> GetMemberships()
         {
-            var ms = Manager.GetProjectMemberships(_Project.Id.ToString());
+            var parameters = new NameValueCollection
+            {
+                { RedmineKeys.LIMIT, "100" },
+            };
+            var request = new Redmine.Net.Api.Net.RequestOptions();
+            request.QueryString = parameters;
+            var ms = Manager.GetProjectMemberships(_Project.Id.ToString(), request);
             return ms.Items;
         }
         public IEnumerable<Issue> GetSubIssues(MSProject.Task tsk)
