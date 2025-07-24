@@ -202,6 +202,11 @@ namespace ProjectRedmine
             issue.EstimatedHours = (float)end.Subtract(start).TotalDays * 8;
             return Manager.Create<Issue>(issue);
         }
+        public void RunDament(Issue issue)
+        {
+            issue.Status = IdentifiableName.Create<IssueStatus>(2);
+            Manager.Update(issue.Id.ToString(), issue);
+        }
 
         public IEnumerable<User> GetALLUsers()
         {

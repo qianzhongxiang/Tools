@@ -19,6 +19,7 @@ namespace FTPBatchCleaner
         public string UserName { get; set; } = "installpackage";
         public string Pwd { get; set; } = "cn22Q6Yd";
         public string HostName { get; set; } = "192.168.10.101";
+        public int ReserveCount { get; set; }
         public List<string> Dirs { get; set; }
         public List<string> DirsForOnlyFiles { get; set; }
     }

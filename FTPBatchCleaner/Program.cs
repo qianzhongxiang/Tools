@@ -78,20 +78,10 @@ class Cleaner : ServiceControl
                     foreach (var dir in Setting.Instance.Dirs)
                     {
                         list = client.GetListing(dir).ToList();
-                        if (list.Count() > 30)
+                        if (list.Count() > Setting.Instance.ReserveCount)
                         {
-                            list.Sort((f1, f2) =>
-                            {
-                                if (f1.Modified < f2.Modified)
-                                {
-                                    return -1;
-                                }
-                                else
-                                {
-                                    return 1;
-                                }
-                            });
-                            for (int i = 0; i < list.Count - 30; i++)
+                            list.Sort((f1, f2) => f1.Modified.CompareTo(f2.Modified));
+                            for (int i = 0; i < list.Count - Setting.Instance.ReserveCount; i++)
                             {
                                 if (token.IsCancellationRequested)
                                 {
@@ -113,20 +103,10 @@ class Cleaner : ServiceControl
                     foreach (var fdir in Setting.Instance.DirsForOnlyFiles)
                     {
                         list = client.GetListing(fdir).Where(f => f.Type == FtpObjectType.File).ToList();
-                        if (list.Count > 30)
+                        if (list.Count > Setting.Instance.ReserveCount)
                         {
-                            list.Sort((f1, f2) =>
-                            {
-                                if (f1.Modified < f2.Modified)
-                                {
-                                    return -1;
-                                }
-                                else
-                                {
-                                    return 1;
-                                }
-                            });
-                            for (int i = 0; i < list.Count - 30; i++)
+                            list.Sort((f1, f2) => f1.Modified.CompareTo(f2.Modified));
+                            for (int i = 0; i < list.Count - Setting.Instance.ReserveCount; i++)
                             {
                                 if (token.IsCancellationRequested)
                                 {

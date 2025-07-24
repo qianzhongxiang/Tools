@@ -28,43 +28,59 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dateStart = new System.Windows.Forms.DateTimePicker();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            dateStart = new DateTimePicker();
+            btnOK = new Button();
+            btnDemondList = new Button();
+            SuspendLayout();
             // 
             // dateStart
             // 
-            this.dateStart.Location = new System.Drawing.Point(110, 51);
-            this.dateStart.Name = "dateStart";
-            this.dateStart.Size = new System.Drawing.Size(200, 20);
-            this.dateStart.TabIndex = 0;
+            dateStart.Location = new Point(68, 40);
+            dateStart.Margin = new Padding(4, 3, 4, 3);
+            dateStart.Name = "dateStart";
+            dateStart.Size = new Size(164, 23);
+            dateStart.TabIndex = 0;
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(110, 176);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(200, 23);
-            this.btnOK.TabIndex = 1;
-            this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            btnOK.Location = new Point(347, 40);
+            btnOK.Margin = new Padding(4, 3, 4, 3);
+            btnOK.Name = "btnOK";
+            btnOK.Size = new Size(192, 41);
+            btnOK.TabIndex = 1;
+            btnOK.Text = "生成周报文档";
+            btnOK.UseVisualStyleBackColor = true;
+            btnOK.Click += btnOK_Click;
+            // 
+            // btnDemondList
+            // 
+            btnDemondList.Location = new Point(347, 142);
+            btnDemondList.Margin = new Padding(4, 3, 4, 3);
+            btnDemondList.Name = "btnDemondList";
+            btnDemondList.Size = new Size(192, 41);
+            btnDemondList.TabIndex = 1;
+            btnDemondList.Text = "生产进行中的需求列表";
+            btnDemondList.UseVisualStyleBackColor = true;
+            btnDemondList.Click += btnDemondList_Click;
             // 
             // Report
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(424, 259);
-            this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.dateStart);
-            this.Name = "Report";
-            this.Text = "Report";
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(555, 226);
+            Controls.Add(btnDemondList);
+            Controls.Add(btnOK);
+            Controls.Add(dateStart);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "Report";
+            Text = "Report";
+            ResumeLayout(false);
         }
 
         #endregion
 
         private System.Windows.Forms.DateTimePicker dateStart;
         private System.Windows.Forms.Button btnOK;
+        private Button btnDemondList;
     }
 }

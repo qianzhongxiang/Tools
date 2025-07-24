@@ -74,7 +74,7 @@ namespace ProjectRedmine
             list_subissues.Controls.Clear();
             foreach (var issue in issues)
             {
-                var rb = new RadioButton { Text = $"[{issue.Tracker.Name}]({issue.AssignedTo.Name}){issue.Subject}", Tag = issue, AutoSize = true,Dock= DockStyle.Fill, Width = list_subissues.Width };
+                var rb = new RadioButton { Text = $"[{issue.Tracker.Name}]({issue.AssignedTo.Name}){issue.Subject}", Tag = issue, AutoSize = true, Dock = DockStyle.Fill, Width = list_subissues.Width };
                 rb.CheckedChanged += Rb_CheckedChanged;
                 list_subissues.Controls.Add(rb);
             }
@@ -167,6 +167,10 @@ namespace ProjectRedmine
             {
                 return;
             }
+            if (Issue.Status.Id == 1)
+            {
+                RedmineProvider.RunDament(Issue);
+            }
             LoadSubIssues();
         }
 
@@ -181,7 +185,16 @@ namespace ProjectRedmine
 
         private void btn_designAchieve_Click(object sender, EventArgs e)
         {
-
+            if (AssignTo is null)
+            {
+                return;
+            }
+            var createdIssue = RedmineProvider.StartTask("整理文档", "* 整理之前的相关设计文档，整合之后迁移到版本功能文件夹（不使用设计模板）", Tsk.OutlineParent.Name, dt_start.Value, dt_end.Value, true, Issue.Id, AssignTo.Id);
+            if (createdIssue is null)
+            {
+                return;
+            }
+            LoadSubIssues();
         }
     }
 }

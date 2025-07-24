@@ -1,5 +1,6 @@
 ﻿using NPOI.XWPF.UserModel;
 using Redmine.Net.Api;
+using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Types;
 using System;
 using System.Collections.Generic;
@@ -20,15 +21,22 @@ namespace ProjectRedmine
         public const int FunctionId = 2;
         public const int CodeMergeId = 6;
         public const int IssueId = 1;
+        public const int DemandId = 4;
         public const string Host = "http://www.vppms.tech";
         public RedmineProvider()
         {
             var apiKey = "4110d8c8eb1729ad3a9ec13b6f505155c242efa2";
             //var builder = new RedmineManagerOptionsBuilder().WithHost(Host).WithApiKeyAuthentication(apiKey);
             //Manager = new RedmineManager(builder);
-            Manager = new RedmineManager(Host, apiKey);
-            Projects = Manager.GetObjects<Project>();
+            //Manager = new RedmineManager(Host, apiKey);
             //Projects = Manager.GetObjects<Project>();
+            //Projects = Manager.GetObjects<Project>();
+
+
+
+            var opt = new RedmineManagerOptionsBuilder().WithApiKeyAuthentication(apiKey).WithHost(Host);
+            Manager = new RedmineManager(opt);
+            Projects = Manager.Get<Project>();
         }
         static XWPFHyperlinkRun CreateHyperlinkRun(XWPFParagraph paragraph, String uri)
         {
@@ -172,13 +180,72 @@ namespace ProjectRedmine
                 }
             }
         }
+        public async Task GenerateDemonds(IEnumerable<Project> projects, DateTime start)
+        {
+            List<Issue> issues1 = new List<Issue>();
+            foreach (var project in projects)
+            {
+                var isP = new NameValueCollection { };
+                isP.Add(RedmineKeys.PROJECT_ID, project.Id.ToString());
+                //isP.Add(RedmineKeys.PROJECT_ID, "5");
+                isP.Add(RedmineKeys.TRACKER_ID, DemandId.ToString());
+                isP.Add(RedmineKeys.STATUS_ID, "2");
+                var now = DateTime.UtcNow;
+                //var testDate = DateTime.Now.Subtract(TimeSpan.FromDays(2)).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
+                //isP.Add(RedmineKeys.UPDATED_ON, $">={testDate}");
+                var request = new Redmine.Net.Api.Net.RequestOptions();
+                var qs = isP.ToQueryString();
+                request.QueryString = isP;
+                var issues = await Manager.GetAsync<Issue>(request);
+                if (issues != null)
+                {
+                    issues1.AddRange(await Manager.GetAsync<Issue>(request));
+                }
+            }
+
+
+            using (XWPFDocument doc = new XWPFDocument())
+            {
+                XWPFParagraph p1 = doc.CreateParagraph();
+                p1.Alignment = ParagraphAlignment.LEFT;
+                XWPFRun r1 = p1.CreateRun();
+                r1.SetText("需求");
+                r1.FontSize = 20;
+
+                foreach (var item in issues1)
+                {
+                    p1 = doc.CreateParagraph();
+                    p1.Alignment = ParagraphAlignment.LEFT;
+                    XWPFHyperlinkRun hyperlinkrun = CreateHyperlinkRun(p1, $"{Host}/issues/{item.Id}");
+                    hyperlinkrun.SetText($"{item.Tracker.Name} #{item.Id}");
+                    hyperlinkrun.SetColor("0000FF");
+                    hyperlinkrun.Underline = UnderlinePatterns.Single;
+                    r1 = p1.CreateRun();
+                    r1.SetText($" [{GetDoneRatio(item)}%] ({item.Status.Name}) {item.Subject}");
+                    r1.FontSize = 13;
+
+                    p1 = doc.CreateParagraph();
+                    p1.IndentationLeft = 350;
+                    p1.Alignment = ParagraphAlignment.LEFT;
+                    r1 = p1.CreateRun();
+                    r1.FontSize = 9;
+                    r1.SetText($" {item.Description}");
+                }
+
+                using (FileStream sw = System.IO.File.Create($"D:\\需求.docx"))
+                {
+                    doc.Write(sw);
+                }
+            }
+        }
 
         private static double GetDoneRatio(Issue item)
         {
             if (item.Status.Name == "已关闭" || item.Status.Name.ToLower() == "closed")
             {
                 return 100;
-            }else
+            }
+            else
             {
                 return item.DoneRatio ?? 0;
             }

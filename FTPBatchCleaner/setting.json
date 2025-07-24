@@ -1,13 +1,14 @@
 {
+  "ReserveCount": 50,
   "Dirs": [
     "/DBBackup/BTS",
     "/DBBackup/202.Backup/bts",
     "/DBBackup/202.Backup/system_wafer",
-    "/DBBackup/202.Backup/tornado_db",
-    "/DBBackup/Wiki",
+    "/DBBackup/202.Backup/tornado_db"
   ],
   "DirsForOnlyFiles": [
     "/DBBackup/202.Backup/bitnami_testlink",
+    "/DBBackup/Penpot/files",
     "/InstallPackages/VIS",
     "/InstallPackages/CalcAgent",
     "/InstallPackages/CalcUnit",

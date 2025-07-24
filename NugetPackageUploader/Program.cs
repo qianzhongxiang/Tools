@@ -83,7 +83,7 @@ namespace NugetPackageUploader
                 {
                     try
                     {
-                        if (DateTime.Now.Subtract(svcLastHandleDate).Days < 1)
+                        if (DateTime.UtcNow.Subtract(svcLastHandleDate).Days < 1)
                         {
                             continue;
                         }
@@ -93,23 +93,23 @@ namespace NugetPackageUploader
                         var dbfile = System.IO.Path.Combine(Setting.Instance.BagetDir, "baget.db");
                         string connectionString = $"Data Source={dbfile};";
                         var start = DateTime.UtcNow;
-                        Vinci.Logging.LoggerFactory.Logger.LogInformation($"FTP:{Setting.Instance.HostName},{Setting.Instance.UserName}, {Setting.Instance.Pwd}");
+                        Vinci.Logging.LoggerFactory.Logger.LogInformation($"FTP:{Setting.Instance.HostName},{Setting.Instance.UserName}, {Setting.Instance.Pwd},{start.ToString()}");
                         var client = new FtpClient(Setting.Instance.HostName, Setting.Instance.UserName, Setting.Instance.Pwd);
                         client.AutoConnect();
                         Vinci.Logging.LoggerFactory.Logger.LogInformation("FTP connect ok");
-                        var localFile = System.IO.Path.Combine(dir, ProfileName);
+                        var localProfileFile = System.IO.Path.Combine(dir, ProfileName);
                         var remoteFile = System.IO.Path.Combine(Setting.Instance.RemoteDir, ProfileName);
                         //client.DownloadFile(localFile, remoteFile);
                         //Vinci.Logging.LoggerFactory.Logger.LogInformation("Profile download ok");
 
-                        var profile = Newtonsoft.Json.JsonConvert.DeserializeObject<Profile>(System.IO.File.ReadAllText(localFile));
+                        var profile = Newtonsoft.Json.JsonConvert.DeserializeObject<Profile>(System.IO.File.ReadAllText(localProfileFile));
                         var lastDate = profile.Updated;
                         // Connect to the database
                         using (var connection = new SqliteConnection(connectionString))
                         {
 
                             // Create a query that retrieves all authors"    
-                            var sql = $"SELECT Key,Id,Version FROM Packages Where Published > '{lastDate}';";
+                            var sql = $"SELECT Key,Id,Version FROM Packages Where Published >= '{lastDate}';";
                             // Use the Query method to execute the query and return the first author
                             var packages = connection.Query<Package>(sql);
                             foreach (var item in packages)
@@ -120,19 +120,21 @@ namespace NugetPackageUploader
                                 Vinci.Logging.LoggerFactory.Logger.LogInformation($"{local} --> {remote}");
                             }
                         }
+                        svcLastHandleDate = start;
                         profile.Updated = start.ToString("yyyy-MM-dd");
 
-                        System.IO.File.WriteAllText(localFile, Newtonsoft.Json.JsonConvert.SerializeObject(profile));
+                        System.IO.File.WriteAllText(localProfileFile, Newtonsoft.Json.JsonConvert.SerializeObject(profile));
 
                         //client.UploadFile(localFile, remoteFile);
-                        //Vinci.Logging.LoggerFactory.Logger.LogInformation($"Profile upload ok:{svcLastHandleDate = DateTime.Now}");
+                        Vinci.Logging.LoggerFactory.Logger.LogInformation($"Profile upload ok:{svcLastHandleDate}");
 
                     }
                     catch (Exception ex)
                     {
                         Vinci.Logging.LoggerFactory.Logger.LogError(ex, "NugetPackageUploader");
                     }
-                    finally { 
+                    finally
+                    {
                         System.Threading.Thread.Sleep(TimeSpan.FromHours(1));
                     }
                 }
