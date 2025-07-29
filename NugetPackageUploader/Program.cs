@@ -120,6 +120,7 @@ namespace NugetPackageUploader
                                 Vinci.Logging.LoggerFactory.Logger.LogInformation($"{local} --> {remote}");
                             }
                         }
+                 
                         svcLastHandleDate = start;
                         profile.Updated = start.ToString("yyyy-MM-dd");
 
@@ -128,6 +129,11 @@ namespace NugetPackageUploader
                         //client.UploadFile(localFile, remoteFile);
                         Vinci.Logging.LoggerFactory.Logger.LogInformation($"Profile upload ok:{svcLastHandleDate}");
 
+                        var localDBFile = System.IO.Path.Combine(dir, "baget.db");
+                        File.Copy(dbfile, localDBFile, true);
+                        client.UploadFile(localDBFile, System.IO.Path.Combine($"{Setting.Instance.RemoteDir.TrimEnd('/', '\\')}_db", $"baget_{start.ToString("yyyy-MM-dd")}.db"));
+
+                        Vinci.Logging.LoggerFactory.Logger.LogInformation($"baget.db upload ok:{svcLastHandleDate}");
                     }
                     catch (Exception ex)
                     {

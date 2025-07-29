@@ -120,6 +120,7 @@ class Cleaner : ServiceControl
                         }
                     }
                     svcLastHandleDate = DateTime.Now;
+                    Vinci.Logging.LoggerFactory.Logger.LogInformation($"FTPBatchCleaner: clean ok, {svcLastHandleDate}");
                 }
                 catch (Exception ex)
                 {
