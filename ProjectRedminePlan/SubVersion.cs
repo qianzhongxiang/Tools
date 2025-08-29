@@ -82,7 +82,7 @@ namespace ProjectRedmine
                     if ((issue = issues.FirstOrDefault(i => i.Id == item.Number1)) != null)
                     {
                         //Update
-                        ThisAddIn.redmineProvider.UpdateMSTask(issue, item);
+                        RedmineProvider.UpdateMSTask(issue, item);
                         issues.Remove(issue);
                     }
                     else if (item.Number1 != 0)
@@ -107,7 +107,7 @@ namespace ProjectRedmine
 
             MSProject.Task newTask = Pj.Tasks.Add
             ($"[{issue.Tracker.Name}] {issue.Subject}", parentTask?.ID + 1 ?? System.Type.Missing);
-            ThisAddIn.redmineProvider.UpdateMSTask(issue, newTask);
+            RedmineProvider.UpdateMSTask(issue, newTask);
             //newTask.Manual = false;
             //newTask.Start = issue.StartDate;
             //if (issue.DueDate != null)

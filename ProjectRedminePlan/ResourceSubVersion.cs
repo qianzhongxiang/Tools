@@ -44,21 +44,21 @@ namespace ProjectRedmine
                        (Version.Name, System.Type.Missing);
             MainTask.OutlineLevel = 1;
 
-         //   DemandTask = Pj.Tasks.Add
-         //("demand", System.Type.Missing);
-         //   DemandTask.OutlineLevel = 2;
+            //   DemandTask = Pj.Tasks.Add
+            //("demand", System.Type.Missing);
+            //   DemandTask.OutlineLevel = 2;
 
-           // DesignTask = Pj.Tasks.Add
-           //("design", System.Type.Missing);
-           // DesignTask.OutlineLevel = 2;
+            // DesignTask = Pj.Tasks.Add
+            //("design", System.Type.Missing);
+            // DesignTask.OutlineLevel = 2;
 
-           // DevelopTask = Pj.Tasks.Add
-           //("develop", System.Type.Missing);
-           // DevelopTask.OutlineLevel = 2;
+            // DevelopTask = Pj.Tasks.Add
+            //("develop", System.Type.Missing);
+            // DevelopTask.OutlineLevel = 2;
 
-           // TestTask = Pj.Tasks.Add
-           //("test", System.Type.Missing);
-           // TestTask.OutlineLevel = 2;
+            // TestTask = Pj.Tasks.Add
+            //("test", System.Type.Missing);
+            // TestTask.OutlineLevel = 2;
         }
         public RedmineManager Manager { get; set; }
 
@@ -101,7 +101,7 @@ namespace ProjectRedmine
                     {
                         Append(DevelopTask, issue);
                     }
-                    if (issue.Tracker.Id == CodeMergeId|| issue.Tracker.Id ==  IssueId)
+                    if (issue.Tracker.Id == CodeMergeId || issue.Tracker.Id == IssueId)
                     {
                         Append(TestTask, issue);
                     }
@@ -120,7 +120,7 @@ namespace ProjectRedmine
             //isP.Add(RedmineKeys.UPDATED_ON, $">={MSProjectWrapper.UpdateTimeStr}");
             //var testDate = DateTime.Now.Subtract(TimeSpan.FromDays(2)).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
             //isP.Add(RedmineKeys.UPDATED_ON, $">={testDate}");
-             var request = new Redmine.Net.Api.Net.RequestOptions();
+            var request = new Redmine.Net.Api.Net.RequestOptions();
             request.QueryString = isP;
             var issues = await Manager.GetAsync<Issue>(request);
             if (issues != null)
@@ -131,7 +131,7 @@ namespace ProjectRedmine
                     if ((issue = issues.FirstOrDefault(i => i.Id == item.Number1)) != null)
                     {
                         //Update
-                        ThisAddIn.redmineProvider.UpdateMSTask(issue, item);
+                        RedmineProvider.UpdateMSTask(issue, item);
                         issues.Remove(issue);
                     }
                     else if (item.Number1 != 0)
@@ -204,7 +204,7 @@ namespace ProjectRedmine
 
             MSProject.Task newTask = Pj.Tasks.Add
             ($"[{issue.Tracker.Name}] {issue.Subject}", parentTask?.ID + 1 ?? System.Type.Missing);
-            ThisAddIn.redmineProvider.UpdateMSTask(issue,newTask);
+            RedmineProvider.UpdateMSTask(issue, newTask);
             //newTask.Manual = false;
             //newTask.Start = issue.StartDate;
             //if (issue.DueDate != null)

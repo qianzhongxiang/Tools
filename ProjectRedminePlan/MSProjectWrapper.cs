@@ -1,5 +1,6 @@
 ﻿using Microsoft.Office.Interop.MSProject;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,15 +14,19 @@ namespace ProjectRedmine
         Resource
     }
 
+
     public class MSProjectWrapper
     {
-        public static Dictionary<Project, MSProjectWrapper> Wrappers { get; set; } = new Dictionary<Project, MSProjectWrapper>();
-
+        public static ConcurrentDictionary<string, MSProjectWrapper> Wrappers { get; set; } = new ConcurrentDictionary<string, MSProjectWrapper>();
+        public static void RemoveProj(Microsoft.Office.Interop.MSProject.Project pj)
+        {
+            Wrappers.TryRemove(pj.FullName, out MSProjectWrapper _);
+        }
         public static MSProjectWrapper CreateOrNewWrapper(Microsoft.Office.Interop.MSProject.Project pj)
         {
-            if (Wrappers.ContainsKey(pj))
+            if (Wrappers.ContainsKey(pj.FullName))
             {
-                return Wrappers[pj];
+                throw new System.Exception("Project existed");
             }
             else
             {
@@ -34,7 +39,7 @@ namespace ProjectRedmine
                     throw new ArgumentNullException(nameof(pj));
                 }
                 var comments = (pj.Comments as string).Split(';');
-               
+
                 var w = new MSProjectWrapper();
                 switch (comments[0].ToLower())
                 {
@@ -62,7 +67,7 @@ namespace ProjectRedmine
                     }
                 }
                 w.RedmineProvider = new RedmineProvider(w.RedmineProj, w.Version);
-                Wrappers.Add(pj, w);
+                Wrappers.TryAdd(pj.FullName, w);
                 return w;
             }
         }
@@ -75,7 +80,7 @@ namespace ProjectRedmine
         public string UpdateTimeStr => UpdateTime.HasValue ? UpdateTime.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ") : "";
         public IEnumerable<msproj.Task> Versions()
         {
-           return Pj.Tasks.Cast<msproj.Task>().Where(i => i.OutlineLevel == 1).ToList();
+            return Pj.Tasks.Cast<msproj.Task>().Where(i => i.OutlineLevel == 1).ToList();
         }
 
         public void SaveParameters()

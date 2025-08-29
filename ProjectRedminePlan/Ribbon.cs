@@ -16,15 +16,14 @@ namespace ProjectRedmine
     public partial class Ribbon
     {
         public MSProject.Application Application => Globals.ThisAddIn.Application;
+        public MSProjectWrapper mSProjectWrapper => MSProjectWrapper.Wrappers[Application.ActiveProject.FullName];
+        public RedmineProvider redmineProvider => mSProjectWrapper.RedmineProvider;
         private void Ribbon1_Load(object sender, RibbonUIEventArgs e)
         {
 
         }
-        RedmineProvider redmineProvider;
-        MSProjectWrapper mSProjectWrapper;
         private async void btnRefresh_Click(object sender, RibbonControlEventArgs e)
         {
-            LoadProvider();
             switch (mSProjectWrapper.ProjType)
             {
                 case ProjectType.Plan:
@@ -50,10 +49,6 @@ namespace ProjectRedmine
                     System.Windows.Forms.MessageBox.Show("please set version first");
                     return;
                 }
-                //redmineProvider = new RedmineProvider(this.Application.ActiveProject.Comments as string);
-                mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
-                redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
-
                 var tasks = this.Application.ActiveProject.Tasks;
                 var c = this.Application.ActiveProject.Tasks.Count;
                 for (; c > 0; c--)
@@ -111,20 +106,6 @@ namespace ProjectRedmine
             }
         }
 
-        private void LoadProvider()
-        {
-            if (mSProjectWrapper is null)
-            {
-
-                mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
-            }
-            if (redmineProvider is null)
-            {
-
-                redmineProvider = new RedmineProvider(mSProjectWrapper.RedmineProj, mSProjectWrapper.Version);
-            }
-        }
-
         private void btnUpdate_Click(object sender, RibbonControlEventArgs e)
         {
             var tasks = this.Application.ActiveSelection.Tasks;
@@ -143,7 +124,7 @@ namespace ProjectRedmine
 
         private void btnConfig_Click(object sender, RibbonControlEventArgs e)
         {
-            var wrapper = MSProjectWrapper.CreateOrNewWrapper(this.Application.ActiveProject);
+            var wrapper = MSProjectWrapper.Wrappers[this.Application.ActiveProject.FullName];
             if (wrapper == null)
             {
                 wrapper = new MSProjectWrapper();
@@ -159,7 +140,6 @@ namespace ProjectRedmine
 
         private void btnURL_Click(object sender, RibbonControlEventArgs e)
         {
-            LoadProvider();
             var tasks = this.Application.ActiveSelection.Tasks;
             var resources = this.Application.ActiveSelection.Resources;
             var fieldIds = this.Application.ActiveSelection.FieldIDList;
@@ -188,7 +168,6 @@ namespace ProjectRedmine
 
         private void btn_publish_Click(object sender, RibbonControlEventArgs e)
         {
-            LoadProvider();
             if (mSProjectWrapper.ProjType != ProjectType.Plan)
             {
                 return;
@@ -203,14 +182,13 @@ namespace ProjectRedmine
                         continue;
                     }
                     var iss = redmineProvider.PublishTask(item);
-                    ThisAddIn.redmineProvider.UpdateMSTask(iss, item);
+                    redmineProvider.UpdateMSTask(iss, item);
                 }
             }
         }
 
         private void btn_updateIssue_Click(object sender, RibbonControlEventArgs e)
         {
-            LoadProvider();
             if (mSProjectWrapper.ProjType != ProjectType.Plan)
             {
                 return;
@@ -235,7 +213,6 @@ namespace ProjectRedmine
 
         private void btn_ResetMSTask_Click(object sender, RibbonControlEventArgs e)
         {
-            LoadProvider();
             if (mSProjectWrapper.ProjType != ProjectType.Plan)
             {
                 return;
@@ -253,7 +230,6 @@ namespace ProjectRedmine
 
         private void btn_start_Click(object sender, RibbonControlEventArgs e)
         {
-            LoadProvider();
             if (mSProjectWrapper.ProjType != ProjectType.Plan)
             {
                 return;

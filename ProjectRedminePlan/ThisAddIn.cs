@@ -136,15 +136,15 @@ namespace ProjectRedmine
 
         private void ResetFromRedmine_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
         {
-            var tasks = this.Application.ActiveSelection.Tasks;
-            foreach (MSProject.Task item in tasks)
-            {
-                if (item.OutlineLevel == 2 && item.Number1 > 0.5)
-                {
-                    var issue = redmineProvider.GetIssue((int)item.Number1);
-                    redmineProvider.UpdateMSTask(issue, item);
-                }
-            }
+            //var tasks = this.Application.ActiveSelection.Tasks;
+            //foreach (MSProject.Task item in tasks)
+            //{
+            //    if (item.OutlineLevel == 2 && item.Number1 > 0.5)
+            //    {
+            //        var issue = redmineProvider.GetIssue((int)item.Number1);
+            //        redmineProvider.UpdateMSTask(issue, item);
+            //    }
+            //}
         }
 
         //private void Application_ProjectBeforeAssignmentNew(MSProject.Project pj, ref bool Cancel)
@@ -239,13 +239,15 @@ namespace ProjectRedmine
 
         private void Application_NewProject(MSProject.Project pj)
         {
-            mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(pj);
+            if (MSProjectWrapper.Wrappers.ContainsKey(pj.FullName))
+            {
+                return;
+            }
+            var mSProjectWrapper = MSProjectWrapper.CreateOrNewWrapper(pj);
             if (mSProjectWrapper != null)
             {
                 pj.Change += ActiveProject_Change;
                 pj.Open += ActiveProject_Open;
-                redmineProvider = mSProjectWrapper.RedmineProvider;
-                //AddCustomTaskContextMenu();
             }
         }
 
@@ -257,11 +259,6 @@ namespace ProjectRedmine
         //{
         //}
 
-
-    
-
-        public static RedmineProvider redmineProvider;
-        static MSProjectWrapper mSProjectWrapper;
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
