@@ -75,7 +75,7 @@
             // 
             this.panel_users.Location = new System.Drawing.Point(645, 2);
             this.panel_users.Name = "panel_users";
-            this.panel_users.Size = new System.Drawing.Size(365, 304);
+            this.panel_users.Size = new System.Drawing.Size(547, 304);
             this.panel_users.TabIndex = 9;
             // 
             // dt_start_issue
@@ -128,14 +128,14 @@
             // 
             this.txt_subject.Location = new System.Drawing.Point(674, 311);
             this.txt_subject.Name = "txt_subject";
-            this.txt_subject.Size = new System.Drawing.Size(336, 21);
+            this.txt_subject.Size = new System.Drawing.Size(518, 21);
             this.txt_subject.TabIndex = 16;
             // 
             // txt_sub_description
             // 
             this.txt_sub_description.Location = new System.Drawing.Point(674, 367);
             this.txt_sub_description.Name = "txt_sub_description";
-            this.txt_sub_description.Size = new System.Drawing.Size(336, 222);
+            this.txt_sub_description.Size = new System.Drawing.Size(518, 222);
             this.txt_sub_description.TabIndex = 17;
             this.txt_sub_description.Text = "";
             // 
@@ -197,7 +197,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1022, 656);
+            this.ClientSize = new System.Drawing.Size(1204, 646);
             this.Controls.Add(this.btn_designAchieve);
             this.Controls.Add(this.rbtn_fun);
             this.Controls.Add(this.rbtn_design);
